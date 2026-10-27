@@ -1,18 +1,18 @@
-# ArchiveTune Privacy Notice
+# FluentMusic Privacy Notice
 
 Last updated: 2026-04-20
 
 ## Scope
 
-This notice covers the Android ArchiveTune app in this repository. It explains what the app stores on your device, what it can send to external services when you use specific features, and what Android permissions it requests.
+This notice covers the Android FluentMusic app in this repository. It explains what the app stores on your device, what it can send to external services when you use specific features, and what Android permissions it requests.
 
 This notice is based on the current source code and build configuration. It does not replace the privacy terms of YouTube or YouTube Music, Last.fm, ListenBrainz, Discord, GitHub, lyrics providers, the ArchiveTune canvas service, or any Together server you choose to use.
 
 ## Privacy Summary
 
 - Most core app data is stored locally on your device.
-- ArchiveTune does not secretly harvest, sell, or broker your personal data.
-- ArchiveTune does not silently send your data to unrelated third-party services.
+- FluentMusic does not secretly harvest, sell, or broker your personal data.
+- FluentMusic does not silently send your data to unrelated third-party services.
 - Optional network features send only the data needed to provide those features.
 - If data leaves your device, it is because you used a specific online feature or integration that requires that transfer.
 - Android backup and device-transfer features may copy part of the app's local data unless excluded by the app's backup rules.
@@ -36,7 +36,7 @@ The app stores data locally to provide playback, library, search, lyrics, sync, 
 
 ## Data the App May Send Off Your Device
 
-ArchiveTune does not silently forward your data to unrelated services. It only contacts external services when you use online features, and the exact payload depends on the feature you use and how you configure it.
+FluentMusic does not silently forward your data to unrelated services. It only contacts external services when you use online features, and the exact payload depends on the feature you use and how you configure it.
 
 | Service or feature | Data that may be sent | When it happens |
 | --- | --- | --- |
@@ -107,14 +107,14 @@ You can control a significant amount of privacy-related behavior from the app an
 
 ## Changes to This Notice
 
-This file should be reviewed whenever ArchiveTune changes its permissions, storage model, external integrations, backup behavior, or network architecture.
+This file should be reviewed whenever FluentMusic changes its permissions, storage model, external integrations, backup behavior, or network architecture.
 
 ## Project Contact
 
 For questions or corrections, use the project repository and issue tracker.
 
-- Repository: [https://github.com/rukamori/ArchiveTune](https://github.com/rukamori/ArchiveTune)
-- Issues: [https://github.com/rukamori/ArchiveTune/issues](https://github.com/rukamori/ArchiveTune/issues)
+- Repository: [https://github.com/ks3695602-sys/FluentMusic-Android](https://github.com/ks3695602-sys/FluentMusic-Android)
+- Issues: [https://github.com/ks3695602-sys/FluentMusic-Android/issues](https://github.com/ks3695602-sys/FluentMusic-Android/issues)
 
 ## Technical Appendix
 

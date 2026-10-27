@@ -558,6 +558,6 @@ class AboutViewModel
         private companion object {
             const val MaxDisplayedContributors = 20
             const val DebugBuildBadge = "DEBUG"
-            const val ContributorsReadMoreUrl = "https://github.com/rukamori/ArchiveTune/graphs/contributors"
+            const val ContributorsReadMoreUrl = "https://github.com/ks3695602-sys/FluentMusic-Android/graphs/contributors"
         }
     }

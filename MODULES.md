@@ -429,7 +429,7 @@ On Linux, macOS, or another POSIX shell:
 
 ```sh
 curl --fail --silent --show-error --location --output package_module.py \
-  https://raw.githubusercontent.com/rukamori/ArchiveTune/dev/scripts/package_module.py &&
+  https://raw.githubusercontent.com/ks3695602-sys/FluentMusic-Android/main/scripts/package_module.py &&
 python3 package_module.py "./my-provider" "./my-provider.arch"
 ```
 
@@ -437,7 +437,7 @@ On Windows PowerShell, use `curl.exe` to select the curl executable rather than
 the Windows PowerShell alias:
 
 ```powershell
-curl.exe --fail --silent --show-error --location --output package_module.py "https://raw.githubusercontent.com/rukamori/ArchiveTune/dev/scripts/package_module.py"
+curl.exe --fail --silent --show-error --location --output package_module.py "https://raw.githubusercontent.com/ks3695602-sys/FluentMusic-Android/main/scripts/package_module.py"
 if ($LASTEXITCODE -eq 0) {
     py -3 .\package_module.py ".\my-provider" ".\my-provider.arch"
 }

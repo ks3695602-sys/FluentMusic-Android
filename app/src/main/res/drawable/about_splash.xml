@@ -5,23 +5,22 @@
     android:viewportWidth="185"
     android:viewportHeight="185">
 
+    <!-- Musical Note & Liquid Soundwave Silhouette for FluentMusic -->
     <path
-        android:fillColor="#fefffe"
-        android:fillAlpha="0.92"
-        android:strokeAlpha="0.92"
-        android:strokeWidth="1"
-        android:pathData="M 136.5,42.5 C 139.572,42.1826 142.572,42.5159 145.5,43.5C 147.696,46.5596
-149.363,49.893 150.5,53.5C 141.188,70.7896 131.355,87.7896 121,104.5C
-115.248,101.04 109.415,97.7069 103.5,94.5C 108.706,84.5868 114.04,74.7535
-119.5,65C 93.5133,65.9659 67.5133,67.1326 41.5,68.5C 41.5,61.1667 41.5,53.8333
-41.5,46.5C 73.3416,45.5964 105.008,44.2631 136.5,42.5 Z" />
+        android:fillColor="#FEFFFE"
+        android:pathData="M92.5,20 C52.46,20 20,52.46 20,92.5 C20,132.54 52.46,165 92.5,165 C132.54,165 165,132.54 165,92.5 C165,52.46 132.54,20 92.5,20 Z M92.5,32 C125.91,32 153,59.09 153,92.5 C153,125.91 125.91,153 92.5,153 C59.09,153 32,125.91 32,92.5 C32,59.09 59.09,32 92.5,32 Z" />
+
+    <!-- Musical note with fluent sound wave accents -->
     <path
-        android:fillColor="#fefffe"
-        android:fillAlpha="0.914"
-        android:strokeAlpha="0.914"
-        android:strokeWidth="1"
-        android:pathData="M 77.5,75.5 C 84.8406,76.1159 92.174,76.7826 99.5,77.5C 97.8365,97.8139
-94.3365,117.814 89,137.5C 87.8225,142.225 85.9892,146.559 83.5,150.5C
-76.3087,148.954 69.3087,146.954 62.5,144.5C 69.9692,122.011 74.9692,99.011
-77.5,75.5 Z" />
+        android:fillColor="#FEFFFE"
+        android:pathData="M115,55 L115,108.5 C111.8,106.3 107.8,105 103.5,105 C93.3,105 85,113.3 85,123.5 C85,133.7 93.3,142 103.5,142 C113.7,142 122,133.7 122,123.5 L122,72 L138,72 L138,55 L115,55 Z" />
+
+    <!-- Fluent wave lines -->
+    <path
+        android:fillColor="#FEFFFE"
+        android:pathData="M62,80 C67,88 67,97 62,105 C59.5,102 59.5,83 62,80 Z" />
+
+    <path
+        android:fillColor="#FEFFFE"
+        android:pathData="M52,70 C60,84 60,101 52,115 C48,111 48,74 52,70 Z" />
 </vector>
