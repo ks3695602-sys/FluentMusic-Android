@@ -85,6 +85,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.util.lerp
 import moe.rukamori.archivetune.constants.AppBarHeight
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
+import moe.rukamori.archivetune.ui.component.liquidglass.liquidGlass
 import kotlin.math.max
 
 @ExperimentalMaterial3Api
@@ -189,17 +192,23 @@ fun TopSearch(
                 ).toDp()
         }
 
+        val config = LocalLiquidGlassConfig.current
+        val backdrop = LocalBackdrop.current
+
         Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .height(topInset + AppBarHeight)
-                    .background(color = MaterialTheme.colorScheme.surface),
+                    .background(
+                        color = if (config.enabled) MaterialTheme.colorScheme.surface.copy(alpha = 0.65f)
+                        else MaterialTheme.colorScheme.surface
+                    ),
         )
 
         Surface(
             shape = animatedShape,
-            color = colors.containerColor,
+            color = if (config.enabled) colors.containerColor.copy(alpha = config.tintAlpha) else colors.containerColor,
             contentColor = contentColorFor(colors.containerColor),
             tonalElevation = tonalElevation,
             modifier =
@@ -208,7 +217,19 @@ fun TopSearch(
                         top = animatedSurfaceTopPadding,
                         start = startPadding,
                         end = endPadding,
-                    ).size(width = width, height = height),
+                    )
+                    .size(width = width, height = height)
+                    .then(
+                        if (config.enabled) {
+                            Modifier.liquidGlass(
+                                shape = animatedShape,
+                                backdrop = backdrop,
+                                config = config,
+                                tintColor = colors.containerColor,
+                                borderAlpha = 0.35f,
+                            )
+                        } else Modifier
+                    ),
         ) {
             Column {
                 SearchBarInputField(

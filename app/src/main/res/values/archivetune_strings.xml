@@ -719,7 +719,10 @@
     <string name="ai_api_test_failed">API test failed</string>
     <string name="ai_translation_menu">AI Translation</string>
     <string name="about_lead_developer">Lead Developer</string>
-    <string name="about_archive_tune_team">Team</string>
+    <string name="about_archive_tune_team">Credits &amp; Upstream Attribution</string>
+    <string name="about_position_fluent_maintainer">Maintainer &amp; Lead Developer</string>
+    <string name="about_position_archivetune_author">Original Project Author · ArchiveTune (GPL-3.0)</string>
+    <string name="about_position_liquidglass_author">Liquid Glass Engine · AndroidLiquidGlass (Apache-2.0)</string>
     <string name="about_respecter">Respecter</string>
     <string name="about_contributors">Contributors</string>
     <string name="about_translation_contributors_error">Couldn’t load translation credits.</string>

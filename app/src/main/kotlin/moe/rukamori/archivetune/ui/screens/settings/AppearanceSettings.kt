@@ -72,6 +72,11 @@ import moe.rukamori.archivetune.R
 import moe.rukamori.archivetune.constants.AppFontPreference
 import moe.rukamori.archivetune.constants.BackdropBlurAmountKey
 import moe.rukamori.archivetune.constants.BackdropEnabledKey
+import moe.rukamori.archivetune.constants.LiquidGlassEnabledKey
+import moe.rukamori.archivetune.constants.LiquidGlassBlurRadiusKey
+import moe.rukamori.archivetune.constants.LiquidGlassRefractionKey
+import moe.rukamori.archivetune.constants.LiquidGlassTintAlphaKey
+import kotlin.math.roundToInt
 import moe.rukamori.archivetune.constants.BlurRadiusKey
 import moe.rukamori.archivetune.constants.ChipSortTypeKey
 import moe.rukamori.archivetune.constants.CropThumbnailToSquareKey
@@ -274,6 +279,10 @@ fun AppearanceSettings(navController: NavController) {
     val (blurRadius, onBlurRadiusChange) = rememberPreference(BlurRadiusKey, defaultValue = 48f)
     val (backdropEnabled, onBackdropEnabledChange) = rememberPreference(BackdropEnabledKey, defaultValue = true)
     val (backdropBlurAmount, onBackdropBlurAmountChange) = rememberPreference(BackdropBlurAmountKey, defaultValue = 60)
+    val (liquidGlassEnabled, onLiquidGlassEnabledChange) = rememberPreference(LiquidGlassEnabledKey, defaultValue = true)
+    val (liquidGlassBlurRadius, onLiquidGlassBlurRadiusChange) = rememberPreference(LiquidGlassBlurRadiusKey, defaultValue = 16f)
+    val (liquidGlassRefraction, onLiquidGlassRefractionChange) = rememberPreference(LiquidGlassRefractionKey, defaultValue = 24f)
+    val (liquidGlassTintAlpha, onLiquidGlassTintAlphaChange) = rememberPreference(LiquidGlassTintAlphaKey, defaultValue = 0.22f)
     val (fontPreference, onFontPreferenceChange) =
         rememberEnumPreference(
             FontPreferenceKey,
@@ -782,6 +791,75 @@ fun AppearanceSettings(navController: NavController) {
                         description = customFontDescription,
                         icon = { Icon(painterResource(R.drawable.text_fields), null) },
                         onClick = pickCustomFont,
+                    )
+                }
+            }
+
+            PreferenceGroup(title = "Liquid Glass") {
+                item {
+                    SwitchPreference(
+                        title = { Text("Enable Liquid Glass UI") },
+                        description = "Apply liquid glass refraction and blur to bottom bar, buttons, and headers",
+                        icon = { Icon(painterResource(R.drawable.blur_on), null) },
+                        checked = liquidGlassEnabled,
+                        onCheckedChange = onLiquidGlassEnabledChange,
+                    )
+                }
+
+                item {
+                    PreferenceEntry(
+                        title = { Text("Global Blur Radius") },
+                        description = "${liquidGlassBlurRadius.roundToInt()} dp",
+                        icon = { Icon(painterResource(R.drawable.blur_on), null) },
+                        isEnabled = liquidGlassEnabled,
+                        content = {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Slider(
+                                value = liquidGlassBlurRadius,
+                                onValueChange = onLiquidGlassBlurRadiusChange,
+                                valueRange = 4f..40f,
+                                enabled = liquidGlassEnabled,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        },
+                    )
+                }
+
+                item {
+                    PreferenceEntry(
+                        title = { Text("Refraction Intensity") },
+                        description = "${liquidGlassRefraction.roundToInt()} dp",
+                        icon = { Icon(painterResource(R.drawable.blur_on), null) },
+                        isEnabled = liquidGlassEnabled,
+                        content = {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Slider(
+                                value = liquidGlassRefraction,
+                                onValueChange = onLiquidGlassRefractionChange,
+                                valueRange = 0f..48f,
+                                enabled = liquidGlassEnabled,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        },
+                    )
+                }
+
+                item {
+                    PreferenceEntry(
+                        title = { Text("Glass Tint Translucency") },
+                        description = "${(liquidGlassTintAlpha * 100).roundToInt()}%",
+                        icon = { Icon(painterResource(R.drawable.palette), null) },
+                        isEnabled = liquidGlassEnabled,
+                        content = {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Slider(
+                                value = liquidGlassTintAlpha,
+                                onValueChange = onLiquidGlassTintAlphaChange,
+                                valueRange = 0.05f..0.60f,
+                                enabled = liquidGlassEnabled,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        },
                     )
                 }
             }

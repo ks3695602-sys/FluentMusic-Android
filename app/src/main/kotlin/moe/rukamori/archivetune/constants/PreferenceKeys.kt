@@ -98,6 +98,12 @@ val BlurRadiusKey = floatPreferencesKey("blurRadius")
 // Backdrop blur for detail pages
 val BackdropEnabledKey = booleanPreferencesKey("backdropEnabled")
 val BackdropBlurAmountKey = intPreferencesKey("backdropBlurAmount")
+
+// Liquid Glass Preferences
+val LiquidGlassEnabledKey = booleanPreferencesKey("liquidGlassEnabled")
+val LiquidGlassBlurRadiusKey = floatPreferencesKey("liquidGlassBlurRadius")
+val LiquidGlassRefractionKey = floatPreferencesKey("liquidGlassRefraction")
+val LiquidGlassTintAlphaKey = floatPreferencesKey("liquidGlassTintAlpha")
 val MiniPlayerLastAnchorKey = intPreferencesKey("miniPlayerLastAnchor")
 val MiniPlayerBackgroundStyleKey = stringPreferencesKey("miniPlayerBackgroundStyle")
 val NavigationBarBackgroundStyleKey = stringPreferencesKey("navigationBarBackgroundStyle")

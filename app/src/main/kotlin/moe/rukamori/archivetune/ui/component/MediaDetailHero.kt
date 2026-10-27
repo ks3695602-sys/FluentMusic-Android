@@ -64,6 +64,9 @@ import moe.rukamori.archivetune.constants.AppBarHeight
 import moe.rukamori.archivetune.ui.utils.YtimgResizePolicy
 import moe.rukamori.archivetune.ui.utils.fadingEdge
 import moe.rukamori.archivetune.ui.utils.resize
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
+import moe.rukamori.archivetune.ui.component.liquidglass.liquidGlass
 
 @Composable
 public fun MediaDetailHero(
@@ -306,6 +309,8 @@ public fun MediaDetailPrimaryActions(
             disabledContainerColor = contentColor.copy(alpha = 0.08f),
             disabledContentColor = contentColor.copy(alpha = 0.38f),
         )
+    val liquidGlassConfig = LocalLiquidGlassConfig.current
+    val liquidGlassBackdrop = LocalBackdrop.current
     val actionScrollState = rememberScrollState()
     val actionScrollMaxValue = actionScrollState.maxValue
 
@@ -358,19 +363,31 @@ public fun MediaDetailPrimaryActions(
 
                 onPlay?.let { play ->
                     val playButtonHeight = ButtonDefaults.MediumContainerHeight
+                    val playShape = RoundedCornerShape(percent = 50)
                     Button(
                         onClick = play,
-                        shape = RoundedCornerShape(percent = 50),
+                        shape = playShape,
                         colors =
                             ButtonDefaults.buttonColors(
-                                containerColor = contentColor,
+                                containerColor = if (liquidGlassConfig.enabled) contentColor.copy(alpha = 0.85f) else contentColor,
                                 contentColor = contrastingColor,
                             ),
                         contentPadding = ButtonDefaults.contentPaddingFor(playButtonHeight, hasStartIcon = true),
                         modifier =
                             Modifier
                                 .layoutId(MediaDetailActionLayoutId.Play)
-                                .heightIn(min = playButtonHeight),
+                                .heightIn(min = playButtonHeight)
+                                .then(
+                                    if (liquidGlassConfig.enabled) {
+                                        Modifier.liquidGlass(
+                                            shape = playShape,
+                                            backdrop = liquidGlassBackdrop,
+                                            config = liquidGlassConfig,
+                                            tintColor = contentColor,
+                                            borderAlpha = 0.5f,
+                                        )
+                                    } else Modifier
+                                ),
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.play),

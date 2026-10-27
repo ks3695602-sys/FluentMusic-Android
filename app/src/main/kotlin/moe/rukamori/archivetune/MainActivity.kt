@@ -234,6 +234,13 @@ import moe.rukamori.archivetune.constants.PlayerBackgroundStyleKey
 import moe.rukamori.archivetune.constants.PlayerDesignStyle
 import moe.rukamori.archivetune.constants.PlayerDesignStyleKey
 import moe.rukamori.archivetune.constants.PureBlackKey
+import moe.rukamori.archivetune.constants.LiquidGlassEnabledKey
+import moe.rukamori.archivetune.constants.LiquidGlassBlurRadiusKey
+import moe.rukamori.archivetune.constants.LiquidGlassRefractionKey
+import moe.rukamori.archivetune.constants.LiquidGlassTintAlphaKey
+import moe.rukamori.archivetune.ui.component.liquidglass.LiquidGlassConfig
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
+import androidx.compose.ui.unit.dp
 import moe.rukamori.archivetune.constants.RemindAfterKey
 import moe.rukamori.archivetune.constants.SYSTEM_DEFAULT
 import moe.rukamori.archivetune.constants.SearchSource
@@ -830,6 +837,20 @@ class MainActivity : ComponentActivity() {
                 }
             val pureBlackEnabled by rememberPreference(PureBlackKey, defaultValue = false)
             val pureBlack = pureBlackEnabled && useDarkTheme
+
+            val liquidGlassEnabled by rememberPreference(LiquidGlassEnabledKey, defaultValue = true)
+            val liquidGlassBlurRadius by rememberPreference(LiquidGlassBlurRadiusKey, defaultValue = 16f)
+            val liquidGlassRefraction by rememberPreference(LiquidGlassRefractionKey, defaultValue = 24f)
+            val liquidGlassTintAlpha by rememberPreference(LiquidGlassTintAlphaKey, defaultValue = 0.22f)
+
+            val liquidGlassConfig = remember(liquidGlassEnabled, liquidGlassBlurRadius, liquidGlassRefraction, liquidGlassTintAlpha) {
+                LiquidGlassConfig(
+                    enabled = liquidGlassEnabled,
+                    blurRadius = liquidGlassBlurRadius.dp,
+                    refraction = liquidGlassRefraction.dp,
+                    tintAlpha = liquidGlassTintAlpha,
+                )
+            }
 
             val customThemeSeedPalette =
                 remember(customThemeColorValue) {
@@ -1720,6 +1741,7 @@ class MainActivity : ComponentActivity() {
                         LocalSyncUtils provides syncUtils,
                         moe.rukamori.archivetune.ui.component.LocalBottomSheetPageState provides bottomSheetPageState,
                         moe.rukamori.archivetune.ui.component.LocalMenuState provides menuState,
+                        LocalLiquidGlassConfig provides liquidGlassConfig,
                     ) {
                         CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides screenBackDispatcherOwner) {
                             Row {

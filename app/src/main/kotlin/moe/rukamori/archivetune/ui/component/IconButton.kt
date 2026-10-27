@@ -1,8 +1,8 @@
 /*
- * ArchiveTune (2026)
- * © Rukamori — github.com/rukamori
- * GPL-3.0 License | Contributors: see git history
- * Do not remove or alter this notice. - Per GPL-3.0 Section 4 & Section 5
+ * FluentMusic for Android (2026)
+ * Maintainer: Jayprakash Sahu
+ * Original Project: ArchiveTune by rukamori (GPL-3.0)
+ * Liquid Glass Engine: AndroidLiquidGlass by Kyant0 (Apache-2.0)
  */
 
 package moe.rukamori.archivetune.ui.component
@@ -36,6 +36,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
+import moe.rukamori.archivetune.ui.component.liquidglass.liquidGlass
 
 @Composable
 fun ResizableIconButton(
@@ -72,13 +75,29 @@ fun IconButton(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit,
 ) {
+    val config = LocalLiquidGlassConfig.current
+    val backdrop = LocalBackdrop.current
+
+    val glassModifier = if (config.enabled) {
+        Modifier.liquidGlass(
+            shape = CircleShape,
+            backdrop = backdrop,
+            config = config,
+            tintColor = if (colors.containerColor != Color.Transparent) colors.containerColor else MaterialTheme.colorScheme.surfaceVariant,
+            borderAlpha = 0.25f,
+        )
+    } else {
+        Modifier
+            .clip(CircleShape)
+            .background(color = colors.containerColor)
+    }
+
     Box(
         modifier =
             modifier
                 .minimumInteractiveComponentSize()
                 .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
-                .clip(CircleShape)
-                .background(color = colors.containerColor)
+                .then(glassModifier)
                 .combinedClickable(
                     onClick = onClick,
                     onLongClick = onLongClick,

@@ -229,12 +229,31 @@ fun DraggableScrollbar(
         ) {
             val color = if (isDragging) thumbColorActive else thumbColor
             val cornerRadiusPx = thumbCornerRadius.toPx()
+            val thumbTop = animatedThumbY.value
 
+            // 1. Liquid Glass Translucent Body
             drawRoundRect(
-                color = color,
-                topLeft = Offset(0f, animatedThumbY.value),
+                color = color.copy(alpha = if (isDragging) 0.85f else 0.55f),
+                topLeft = Offset(0f, thumbTop),
                 size = Size(this.size.width, constThumbHeight),
                 cornerRadius = CornerRadius(cornerRadiusPx),
+            )
+
+            // 2. Specular border highlight
+            drawRoundRect(
+                color = Color.White.copy(alpha = if (isDragging) 0.65f else 0.35f),
+                topLeft = Offset(0f, thumbTop),
+                size = Size(this.size.width, constThumbHeight),
+                cornerRadius = CornerRadius(cornerRadiusPx),
+                style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1f),
+            )
+
+            // 3. Liquid Glass reflection specular strip
+            drawRoundRect(
+                color = Color.White.copy(alpha = if (isDragging) 0.45f else 0.2f),
+                topLeft = Offset(1.5f, thumbTop + 2f),
+                size = Size(this.size.width * 0.4f, constThumbHeight - 4f),
+                cornerRadius = CornerRadius(cornerRadiusPx / 2),
             )
         }
     }

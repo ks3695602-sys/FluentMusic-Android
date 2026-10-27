@@ -98,6 +98,9 @@ import moe.rukamori.archivetune.R
 import moe.rukamori.archivetune.constants.HISTORY_DURATION_DEFAULT
 import moe.rukamori.archivetune.constants.HISTORY_DURATION_RANGE
 import kotlin.math.roundToInt
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
+import moe.rukamori.archivetune.ui.component.liquidglass.liquidGlass
 
 val LocalPreferenceInGroup = compositionLocalOf { false }
 
@@ -253,11 +256,14 @@ fun PreferenceEntry(
         }
     }
 
+    val config = LocalLiquidGlassConfig.current
+    val backdrop = LocalBackdrop.current
+
     Card(
         shape = resolvedShape,
         colors =
             CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                containerColor = if (config.enabled) MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = config.tintAlpha) else MaterialTheme.colorScheme.surfaceContainerLow,
             ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier =
@@ -266,6 +272,16 @@ fun PreferenceEntry(
                 .padding(
                     horizontal = if (inGroup) 0.dp else 16.dp,
                     vertical = if (inGroup) 0.dp else 3.dp,
+                ).then(
+                    if (config.enabled) {
+                        Modifier.liquidGlass(
+                            shape = resolvedShape,
+                            backdrop = backdrop,
+                            config = config,
+                            tintColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                            borderAlpha = 0.22f,
+                        )
+                    } else Modifier
                 ).graphicsLayer {
                     scaleX = scale
                     scaleY = scale
@@ -834,9 +850,20 @@ fun SwitchPreference(
         description = description,
         icon = icon,
         trailingContent = {
+            val switchConfig = LocalLiquidGlassConfig.current
+            val switchBackdrop = LocalBackdrop.current
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
+                modifier = if (switchConfig.enabled) {
+                    Modifier.liquidGlass(
+                        shape = CircleShape,
+                        backdrop = switchBackdrop,
+                        config = switchConfig,
+                        tintColor = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                        borderAlpha = 0.35f,
+                    )
+                } else Modifier,
                 enabled = isEnabled,
                 thumbContent = {
                     AnimatedContent(

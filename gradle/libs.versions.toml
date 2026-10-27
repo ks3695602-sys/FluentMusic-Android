@@ -50,6 +50,7 @@ quickjsKt = "1.0.15"
 protobuf = "4.36.2"
 webkit = "1.18.0"
 haze = "2.0.1"
+backdrop = "2.0.1"
 
 
 [libraries]
@@ -161,6 +162,7 @@ quickjs-kt = { module = "io.github.dokar3:quickjs-kt", version.ref = "quickjsKt"
 haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-blur = { module = "dev.chrisbanes.haze:haze-blur", version.ref = "haze" }
 haze-glass = { module = "dev.chrisbanes.haze:haze-glass", version.ref = "haze" }
+backdrop = { module = "io.github.kyant0:backdrop", version.ref = "backdrop" }
 
 
 

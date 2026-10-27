@@ -64,7 +64,7 @@ android {
     compileSdkMinor = 2
 
     defaultConfig {
-    applicationId = "moe.rukamori.archivetune"
+        applicationId = "com.jayprakash.fluentmusic"
         minSdk = 26
         targetSdk = 37
         versionCode = 142
@@ -114,11 +114,11 @@ android {
         val githubOwner =
             System.getenv("GITHUB_OWNER")?.trim()
                 ?: localProperties.getProperty("GITHUB_OWNER")?.trim()
-                ?: "rukamori"
+                ?: "ks3695602-sys"
         val githubRepo =
             System.getenv("GITHUB_REPO")?.trim()
                 ?: localProperties.getProperty("GITHUB_REPO")?.trim()
-                ?: "ArchiveTune"
+                ?: "FluentMusic-Android"
         buildConfigField("String", "GITHUB_OWNER", githubOwner.asBuildConfigString())
         buildConfigField("String", "GITHUB_REPO", githubRepo.asBuildConfigString())
 
@@ -326,6 +326,7 @@ dependencies {
     implementation(libs.haze)
     implementation(libs.haze.blur)
     implementation(libs.haze.glass)
+    implementation(libs.backdrop)
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.palette)
     implementation(libs.androidsvg)
