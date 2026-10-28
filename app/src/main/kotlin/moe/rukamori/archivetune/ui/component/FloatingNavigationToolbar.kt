@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -130,10 +131,7 @@ fun FloatingNavigationToolbar(
                 onTabSelected = { index ->
                     val screen = items.getOrNull(index) ?: return@LiquidBottomTabs
                     val selected = isSelected(screen)
-                    val onClick = rememberNavigationItemClick(
-                        screen, selected, onItemClick, onSearchItemDoubleClick,
-                    )
-                    onClick()
+                    onItemClick(screen, selected)
                 },
                 backdrop = rootBackdrop,
                 tabsCount = items.size.coerceAtLeast(1),
