@@ -9,6 +9,12 @@
 
 package moe.rukamori.archivetune.ui.component
 
+import moe.rukamori.archivetune.ui.component.liquidglass.LiquidBottomTabs
+import moe.rukamori.archivetune.ui.component.liquidglass.LiquidBottomTab
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+
+
 import android.os.SystemClock
 import android.view.ViewConfiguration
 import androidx.compose.animation.Crossfade
@@ -107,6 +113,71 @@ fun FloatingNavigationToolbar(
             Color.Transparent
         }
     val motionScheme = MaterialTheme.motionScheme
+    if (isLiquidGlassEnabled && effectiveBackgroundStyle == NavigationBarBackgroundStyle.GLASS) {
+        val rootBackdrop = LocalBackdrop.current ?: rememberLayerBackdrop()
+        Box(
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)),
+            contentAlignment = Alignment.Center,
+        ) {
+            LiquidBottomTabs(
+                selectedTabIndex = {
+                    val idx = items.indexOfFirst { isSelected(it) }
+                    if (idx >= 0) idx else 0
+                },
+                onTabSelected = { index ->
+                    val screen = items.getOrNull(index) ?: return@LiquidBottomTabs
+                    val selected = isSelected(screen)
+                    val onClick = rememberNavigationItemClick(
+                        screen, selected, onItemClick, onSearchItemDoubleClick,
+                    )
+                    onClick()
+                },
+                backdrop = rootBackdrop,
+                tabsCount = items.size.coerceAtLeast(1),
+                shape = navigationShape,
+                modifier = Modifier
+                    .widthIn(max = NavigationBarMaxWidth)
+                    .fillMaxWidth()
+                    .height(NavigationBarHeight),
+            ) {
+                items.forEach { screen ->
+                    val selected = isSelected(screen)
+                    val onClick = rememberNavigationItemClick(
+                        screen, selected, onItemClick, onSearchItemDoubleClick,
+                    )
+
+                    LiquidBottomTab(
+                        onClick = onClick,
+                    ) {
+                        Crossfade(
+                            targetState = selected,
+                            animationSpec = motionScheme.fastEffectsSpec(),
+                            label = "navigationItemIcon",
+                        ) { isSel ->
+                            Icon(
+                                painter =
+                                    painterResource(
+                                        if (isSel) screen.iconIdActive else screen.iconIdInactive,
+                                    ),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+                        Text(
+                            text = stringResource(screen.titleId),
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelSmall,
+                        )
+                    }
+                }
+            }
+        }
+        return
+    }
+
     Box(
         modifier =
             modifier

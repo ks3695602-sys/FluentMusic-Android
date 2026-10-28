@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
 import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
 import moe.rukamori.archivetune.ui.component.liquidglass.liquidGlass
+import moe.rukamori.archivetune.ui.component.liquidglass.LiquidButton
 
 @Composable
 fun ResizableIconButton(
@@ -78,54 +79,50 @@ fun IconButton(
     content: @Composable () -> Unit,
 ) {
     val config = LocalLiquidGlassConfig.current
-    val backdrop = LocalBackdrop.current
 
-    val glassModifier = if (config.enabled) {
+    if (config.enabled) {
         val buttonTint = if (colors.containerColor != Color.Transparent) {
             colors.containerColor.copy(alpha = 0.28f)
         } else {
             MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.22f)
         }
-        Modifier
-            .clip(CircleShape)
-            .background(buttonTint)
-            .border(
-                width = 1.dp,
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.White.copy(alpha = 0.35f),
-                        Color.White.copy(alpha = 0.08f),
-                    ),
-                ),
-                shape = CircleShape,
-            )
+        LiquidButton(
+            onClick = onClick,
+            onLongClick = onLongClick,
+            shape = CircleShape,
+            isInteractive = enabled,
+            tint = buttonTint,
+            surfaceColor = Color.White.copy(alpha = 0.05f),
+            height = 48.dp,
+            modifier = modifier.minimumInteractiveComponentSize().sizeIn(minWidth = 48.dp, minHeight = 48.dp),
+        ) {
+            val contentColor = colors.contentColor
+            CompositionLocalProvider(LocalContentColor provides contentColor, content = content)
+        }
     } else {
-        Modifier
-            .clip(CircleShape)
-            .background(color = colors.containerColor)
-    }
-
-    Box(
-        modifier =
-            modifier
-                .minimumInteractiveComponentSize()
-                .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
-                .then(glassModifier)
-                .combinedClickable(
-                    onClick = onClick,
-                    onLongClick = onLongClick,
-                    enabled = enabled,
-                    role = Role.Button,
-                    interactionSource = interactionSource,
-                    indication =
-                        ripple(
-                            bounded = false,
-                            radius = 24.dp,
-                        ),
-                ),
-        contentAlignment = Alignment.Center,
-    ) {
-        val contentColor = colors.contentColor
-        CompositionLocalProvider(LocalContentColor provides contentColor, content = content)
+        Box(
+            modifier =
+                modifier
+                    .minimumInteractiveComponentSize()
+                    .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
+                    .clip(CircleShape)
+                    .background(color = colors.containerColor)
+                    .combinedClickable(
+                        onClick = onClick,
+                        onLongClick = onLongClick,
+                        enabled = enabled,
+                        role = Role.Button,
+                        interactionSource = interactionSource,
+                        indication =
+                            ripple(
+                                bounded = false,
+                                radius = 24.dp,
+                            ),
+                    ),
+            contentAlignment = Alignment.Center,
+        ) {
+            val contentColor = colors.contentColor
+            CompositionLocalProvider(LocalContentColor provides contentColor, content = content)
+        }
     }
 }

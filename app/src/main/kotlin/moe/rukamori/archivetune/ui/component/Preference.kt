@@ -9,6 +9,9 @@
 
 package moe.rukamori.archivetune.ui.component
 
+import moe.rukamori.archivetune.ui.component.liquidglass.LiquidToggle
+import moe.rukamori.archivetune.ui.component.liquidglass.LiquidSlider
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -857,38 +860,47 @@ fun SwitchPreference(
         description = description,
         icon = icon,
         trailingContent = {
-            Switch(
-                checked = checked,
-                onCheckedChange = onCheckedChange,
-                enabled = isEnabled,
-                thumbContent = {
-                    AnimatedContent(
-                        targetState = checked,
-                        transitionSpec = {
-                            fadeIn(tween(100)) togetherWith fadeOut(tween(100))
-                        },
-                        label = "switchThumbIcon",
-                    ) { isChecked ->
-                        Icon(
-                            painter =
-                                painterResource(
-                                    id = if (isChecked) R.drawable.check else R.drawable.close,
-                                ),
-                            contentDescription = null,
-                            modifier = Modifier.size(SwitchDefaults.IconSize),
-                        )
-                    }
-                },
-                colors =
-                    SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                        checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        checkedIconColor = MaterialTheme.colorScheme.primary,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
-            )
+            val config = LocalLiquidGlassConfig.current
+            if (config.enabled) {
+                LiquidToggle(
+                    selected = { checked },
+                    onSelect = onCheckedChange,
+                    backdrop = null,
+                )
+            } else {
+                Switch(
+                    checked = checked,
+                    onCheckedChange = onCheckedChange,
+                    enabled = isEnabled,
+                    thumbContent = {
+                        AnimatedContent(
+                            targetState = checked,
+                            transitionSpec = {
+                                fadeIn(tween(100)) togetherWith fadeOut(tween(100))
+                            },
+                            label = "switchThumbIcon",
+                        ) { isChecked ->
+                            Icon(
+                                painter =
+                                    painterResource(
+                                        id = if (isChecked) R.drawable.check else R.drawable.close,
+                                    ),
+                                contentDescription = null,
+                                modifier = Modifier.size(SwitchDefaults.IconSize),
+                            )
+                        }
+                    },
+                    colors =
+                        SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                            checkedTrackColor = MaterialTheme.colorScheme.primary,
+                            checkedIconColor = MaterialTheme.colorScheme.primary,
+                            uncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
+                            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                            uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
+                )
+            }
         },
         onClick = { onCheckedChange(!checked) },
         isEnabled = isEnabled,

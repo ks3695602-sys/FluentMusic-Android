@@ -2,6 +2,12 @@ package moe.rukamori.archivetune.ui.component.liquidglass
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import com.kyant.backdrop.highlight.Highlight
+import com.kyant.backdrop.shadow.InnerShadow
+import com.kyant.backdrop.shadow.Shadow
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -33,10 +39,12 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tanh
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LiquidButton(
     onClick: () -> Unit,
-    backdrop: Backdrop,
+    onLongClick: (() -> Unit)? = null,
+    backdrop: Backdrop = rememberLayerBackdrop(),
     modifier: Modifier = Modifier,
     shape: Shape = CircleShape,
     isInteractive: Boolean = true,
@@ -62,6 +70,20 @@ fun LiquidButton(
                     vibrancy()
                     blur(2f.dp.toPx())
                     lens(12f.dp.toPx(), 24f.dp.toPx())
+                },
+                highlight = {
+                    val progress = interactiveHighlight.pressProgress
+                    Highlight.Default.copy(alpha = lerp(0.45f, 0.85f, progress))
+                },
+                shadow = {
+                    Shadow(alpha = 0.2f)
+                },
+                innerShadow = {
+                    val progress = interactiveHighlight.pressProgress
+                    InnerShadow(
+                        radius = 4f.dp * progress,
+                        alpha = 0.35f * progress,
+                    )
                 },
                 layerBlock = if (isInteractive) {
                     {
@@ -101,11 +123,23 @@ fun LiquidButton(
                     }
                 }
             )
-            .clickable(
-                interactionSource = null,
-                indication = if (isInteractive) null else LocalIndication.current,
-                role = Role.Button,
-                onClick = onClick
+            .then(
+                if (onLongClick != null) {
+                    Modifier.combinedClickable(
+                        interactionSource = null,
+                        indication = if (isInteractive) null else LocalIndication.current,
+                        role = Role.Button,
+                        onClick = onClick,
+                        onLongClick = onLongClick
+                    )
+                } else {
+                    Modifier.clickable(
+                        interactionSource = null,
+                        indication = if (isInteractive) null else LocalIndication.current,
+                        role = Role.Button,
+                        onClick = onClick
+                    )
+                }
             )
             .then(
                 if (isInteractive) {

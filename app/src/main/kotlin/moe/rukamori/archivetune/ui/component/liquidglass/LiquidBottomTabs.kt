@@ -50,6 +50,8 @@ import com.kyant.backdrop.highlight.Highlight
 import com.kyant.backdrop.shadow.InnerShadow
 import com.kyant.backdrop.shadow.Shadow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.Shape
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
@@ -63,15 +65,14 @@ fun LiquidBottomTabs(
     backdrop: Backdrop,
     tabsCount: Int,
     modifier: Modifier = Modifier,
+    shape: Shape = CircleShape,
     content: @Composable RowScope.() -> Unit
 ) {
     val isLightTheme = !isSystemInDarkTheme()
-    val accentColor =
-        if (isLightTheme) Color(0xFF0088FF)
-        else Color(0xFF0091FF)
-    val containerColor =
-        if (isLightTheme) Color(0xFFFAFAFA).copy(0.4f)
-        else Color(0xFF121212).copy(0.4f)
+    val accentColor = MaterialTheme.colorScheme.primary
+    val containerColor = MaterialTheme.colorScheme.surface.copy(
+        alpha = if (isLightTheme) 0.35f else 0.45f
+    )
 
     val tabsBackdrop = rememberLayerBackdrop()
 
@@ -81,7 +82,7 @@ fun LiquidBottomTabs(
     ) {
         val density = LocalDensity.current
         val tabWidth = with(density) {
-            (constraints.maxWidth.toFloat() - 8f.dp.toPx()) / tabsCount
+            (constraints.maxWidth.toFloat() - 8f.dp.toPx()) / tabsCount.coerceAtLeast(1)
         }
 
         val offsetAnimation = remember { Animatable(0f) }
@@ -165,7 +166,7 @@ fun LiquidBottomTabs(
                 }
                 .drawBackdrop(
                     backdrop = backdrop,
-                    shape = { CircleShape },
+                    shape = { shape },
                     effects = {
                         vibrancy()
                         blur(8f.dp.toPx())
@@ -282,7 +283,7 @@ fun LiquidBottomTabs(
                     }
                 )
                 .height(56f.dp)
-                .fillMaxWidth(1f / tabsCount)
+                .fillMaxWidth(1f / tabsCount.coerceAtLeast(1))
         )
     }
 }
