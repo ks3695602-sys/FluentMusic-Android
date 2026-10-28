@@ -101,7 +101,11 @@ val BackdropBlurAmountKey = intPreferencesKey("backdropBlurAmount")
 
 // Liquid Glass Preferences
 val LiquidGlassEnabledKey = booleanPreferencesKey("liquidGlassEnabled")
+val LiquidGlassCornerRadiusKey = floatPreferencesKey("liquidGlassCornerRadius")
 val LiquidGlassBlurRadiusKey = floatPreferencesKey("liquidGlassBlurRadius")
+val LiquidGlassRefractionHeightKey = floatPreferencesKey("liquidGlassRefractionHeight")
+val LiquidGlassRefractionAmountKey = floatPreferencesKey("liquidGlassRefractionAmount")
+val LiquidGlassChromaticAberrationKey = booleanPreferencesKey("liquidGlassChromaticAberration")
 val LiquidGlassRefractionKey = floatPreferencesKey("liquidGlassRefraction")
 val LiquidGlassTintAlphaKey = floatPreferencesKey("liquidGlassTintAlpha")
 val MiniPlayerLastAnchorKey = intPreferencesKey("miniPlayerLastAnchor")

@@ -327,6 +327,7 @@ dependencies {
     implementation(libs.haze.blur)
     implementation(libs.haze.glass)
     implementation(libs.backdrop)
+    implementation(libs.kyant.shapes)
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.palette)
     implementation(libs.androidsvg)

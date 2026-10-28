@@ -239,6 +239,13 @@ import moe.rukamori.archivetune.constants.LiquidGlassBlurRadiusKey
 import moe.rukamori.archivetune.constants.LiquidGlassRefractionKey
 import moe.rukamori.archivetune.constants.LiquidGlassTintAlphaKey
 import moe.rukamori.archivetune.ui.component.liquidglass.LiquidGlassConfig
+import com.kyant.backdrop.backdrops.layerBackdrop
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import moe.rukamori.archivetune.constants.LiquidGlassCornerRadiusKey
+import moe.rukamori.archivetune.constants.LiquidGlassRefractionHeightKey
+import moe.rukamori.archivetune.constants.LiquidGlassRefractionAmountKey
+import moe.rukamori.archivetune.constants.LiquidGlassChromaticAberrationKey
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
 import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
 import androidx.compose.ui.unit.dp
 import moe.rukamori.archivetune.constants.RemindAfterKey
@@ -839,15 +846,31 @@ class MainActivity : ComponentActivity() {
             val pureBlack = pureBlackEnabled && useDarkTheme
 
             val liquidGlassEnabled by rememberPreference(LiquidGlassEnabledKey, defaultValue = true)
+            val liquidGlassCornerRadius by rememberPreference(LiquidGlassCornerRadiusKey, defaultValue = 16f)
             val liquidGlassBlurRadius by rememberPreference(LiquidGlassBlurRadiusKey, defaultValue = 16f)
-            val liquidGlassRefraction by rememberPreference(LiquidGlassRefractionKey, defaultValue = 24f)
+            val liquidGlassRefractionHeight by rememberPreference(LiquidGlassRefractionHeightKey, defaultValue = 24f)
+            val liquidGlassRefractionAmount by rememberPreference(LiquidGlassRefractionAmountKey, defaultValue = 24f)
+            val liquidGlassChromaticAberration by rememberPreference(LiquidGlassChromaticAberrationKey, defaultValue = true)
             val liquidGlassTintAlpha by rememberPreference(LiquidGlassTintAlphaKey, defaultValue = 0.22f)
 
-            val liquidGlassConfig = remember(liquidGlassEnabled, liquidGlassBlurRadius, liquidGlassRefraction, liquidGlassTintAlpha) {
+            val rootBackdrop = rememberLayerBackdrop()
+
+            val liquidGlassConfig = remember(
+                liquidGlassEnabled,
+                liquidGlassCornerRadius,
+                liquidGlassBlurRadius,
+                liquidGlassRefractionHeight,
+                liquidGlassRefractionAmount,
+                liquidGlassChromaticAberration,
+                liquidGlassTintAlpha,
+            ) {
                 LiquidGlassConfig(
                     enabled = liquidGlassEnabled,
-                    blurRadius = liquidGlassBlurRadius.dp,
-                    refraction = liquidGlassRefraction.dp,
+                    cornerRadius = liquidGlassCornerRadius,
+                    blurRadius = liquidGlassBlurRadius,
+                    refractionHeight = liquidGlassRefractionHeight,
+                    refractionAmount = liquidGlassRefractionAmount,
+                    chromaticAberration = liquidGlassChromaticAberration,
                     tintAlpha = liquidGlassTintAlpha,
                 )
             }
@@ -1742,6 +1765,7 @@ class MainActivity : ComponentActivity() {
                         moe.rukamori.archivetune.ui.component.LocalBottomSheetPageState provides bottomSheetPageState,
                         moe.rukamori.archivetune.ui.component.LocalMenuState provides menuState,
                         LocalLiquidGlassConfig provides liquidGlassConfig,
+                        LocalBackdrop provides rootBackdrop,
                     ) {
                         CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides screenBackDispatcherOwner) {
                             Row {
@@ -2509,7 +2533,7 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     },
-                                    modifier = Modifier.fillMaxSize().hazeSource(menuHazeState),
+                                    modifier = Modifier.fillMaxSize().layerBackdrop(rootBackdrop).hazeSource(menuHazeState),
                                 ) {
                                     var transitionDirection =
                                         AnimatedContentTransitionScope.SlideDirection.Left

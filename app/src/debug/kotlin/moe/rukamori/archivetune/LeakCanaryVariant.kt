@@ -14,8 +14,8 @@ import leakcanary.LeakCanary
 internal object LeakCanaryVariant {
   @JvmStatic
   fun initialize(@Suppress("UNUSED_PARAMETER") application: Application) {
-    AppWatcher.config = AppWatcher.config.copy(enabled = true)
-    LeakCanary.config = LeakCanary.config.copy(dumpHeap = true)
+    AppWatcher.config = AppWatcher.config.copy(enabled = false)
+    LeakCanary.config = LeakCanary.config.copy(dumpHeap = false)
   }
 
   @JvmStatic
@@ -23,6 +23,6 @@ internal object LeakCanaryVariant {
     @Suppress("UNUSED_PARAMETER") context: android.content.Context,
     @Suppress("UNUSED_PARAMETER") enabled: Boolean,
   ) {
-    // Debug builds intentionally ignore the Nightly-only toggle.
+    // Disabled in FluentMusic builds to prevent notification popups.
   }
 }

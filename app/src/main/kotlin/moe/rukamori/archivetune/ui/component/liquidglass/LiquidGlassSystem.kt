@@ -31,31 +31,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.kyant.backdrop.backdrops.LayerBackdrop
+import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.drawBackdrop
 import com.kyant.backdrop.effects.blur
 import com.kyant.backdrop.effects.lens
+import com.kyant.backdrop.effects.vibrancy
 
 @Immutable
 data class LiquidGlassConfig(
     val enabled: Boolean = true,
-    val blurRadius: Dp = 16.dp,
-    val refraction: Dp = 24.dp,
+    val cornerRadius: Float = 16f,
+    val blurRadius: Float = 16f,
+    val refractionHeight: Float = 24f,
+    val refractionAmount: Float = 24f,
+    val chromaticAberration: Boolean = true,
     val tintAlpha: Float = 0.22f,
 )
 
 val LocalLiquidGlassConfig = compositionLocalOf { LiquidGlassConfig() }
-val LocalBackdrop = compositionLocalOf<LayerBackdrop?> { null }
+val LocalBackdrop = compositionLocalOf<Backdrop?> { null }
 
 /**
  * Applies the Liquid Glass backdrop shader effect if enabled, or a modern frosted glass fallback.
  */
 fun Modifier.liquidGlass(
     shape: Shape = RoundedCornerShape(16.dp),
-    backdrop: LayerBackdrop? = null,
+    backdrop: Backdrop? = null,
     config: LiquidGlassConfig = LiquidGlassConfig(),
     tintColor: Color = Color.Unspecified,
     borderAlpha: Float = 0.35f,
@@ -73,10 +76,12 @@ fun Modifier.liquidGlass(
                         backdrop = backdrop,
                         shape = { shape },
                         effects = {
-                            val blurPx = config.blurRadius.value * 2.5f
-                            val lensPx = config.refraction.value * 1.5f
+                            vibrancy()
+                            val blurPx = (config.blurRadius * 2.5f).coerceAtLeast(0.1f)
+                            val lensHPx = (config.refractionHeight * 1.5f).coerceAtLeast(0.1f)
+                            val lensAPx = (config.refractionAmount * 1.5f).coerceAtLeast(0.1f)
                             blur(blurPx)
-                            lens(lensPx, lensPx)
+                            lens(lensHPx, lensAPx, chromaticAberration = config.chromaticAberration)
                         },
                     )
                 } else {
@@ -105,7 +110,7 @@ fun Modifier.liquidGlass(
 }
 
 /**
- * A capsule container applying liquid glass effects, ideal for buttons, play buttons, and chips.
+ * A capsule container applying authentic liquid glass effects, ideal for buttons, play buttons, and chips.
  */
 @Composable
 fun LiquidGlassCapsule(
@@ -139,11 +144,10 @@ fun LiquidGlassCapsule(
 fun LiquidGlassHeaderContainer(
     scrollProgress: Float,
     modifier: Modifier = Modifier,
-    backdrop: LayerBackdrop? = LocalBackdrop.current,
+    backdrop: Backdrop? = LocalBackdrop.current,
     config: LiquidGlassConfig = LocalLiquidGlassConfig.current,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val density = LocalDensity.current
     val animatedProgress by animateFloatAsState(
         targetValue = scrollProgress.coerceIn(0f, 1f),
         label = "headerProgress",
@@ -173,9 +177,10 @@ fun LiquidGlassHeaderContainer(
                         backdrop = backdrop,
                         shape = { RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp) },
                         effects = {
-                            val dynamicBlur = (config.blurRadius.value * animatedProgress * 2f)
+                            vibrancy()
+                            val dynamicBlur = (config.blurRadius * animatedProgress * 2f).coerceAtLeast(0.1f)
                             blur(dynamicBlur)
-                            lens(dynamicBlur * 0.5f, dynamicBlur)
+                            lens(dynamicBlur * 0.5f, dynamicBlur, chromaticAberration = config.chromaticAberration)
                         },
                     )
                 } else {
