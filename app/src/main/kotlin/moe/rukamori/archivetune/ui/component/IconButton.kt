@@ -12,6 +12,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -79,13 +81,24 @@ fun IconButton(
     val backdrop = LocalBackdrop.current
 
     val glassModifier = if (config.enabled) {
-        Modifier.liquidGlass(
-            shape = CircleShape,
-            backdrop = backdrop,
-            config = config,
-            tintColor = if (colors.containerColor != Color.Transparent) colors.containerColor else MaterialTheme.colorScheme.surfaceVariant,
-            borderAlpha = 0.25f,
-        )
+        val buttonTint = if (colors.containerColor != Color.Transparent) {
+            colors.containerColor.copy(alpha = 0.28f)
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.22f)
+        }
+        Modifier
+            .clip(CircleShape)
+            .background(buttonTint)
+            .border(
+                width = 1.dp,
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = 0.35f),
+                        Color.White.copy(alpha = 0.08f),
+                    ),
+                ),
+                shape = CircleShape,
+            )
     } else {
         Modifier
             .clip(CircleShape)

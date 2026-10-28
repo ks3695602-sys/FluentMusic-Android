@@ -1046,7 +1046,7 @@ class MainActivity : ComponentActivity() {
                     val floatingBarsHazeState = rememberHazeState()
                     val navigationBarBackgroundStyle by rememberEnumPreference(
                         key = NavigationBarBackgroundStyleKey,
-                        defaultValue = NavigationBarBackgroundStyle.THEME,
+                        defaultValue = NavigationBarBackgroundStyle.GLASS,
                     )
                     val navigationBarMode by rememberEnumPreference(
                         key = NavigationBarModeKey,
@@ -2258,7 +2258,7 @@ class MainActivity : ComponentActivity() {
                                                     modifier =
                                                         Modifier
                                                             .fillMaxSize()
-                                                            .hazeSource(floatingBarsHazeState, zIndex = 1f)
+                                                            .layerBackdrop(rootBackdrop).hazeSource(floatingBarsHazeState, zIndex = 1f)
                                                             .padding(
                                                                 bottom = if (!playerBottomSheetState.isDismissed) MiniPlayerHeight else 0.dp,
                                                             ).navigationBarsPadding(),
@@ -2533,7 +2533,7 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     },
-                                    modifier = Modifier.fillMaxSize().layerBackdrop(rootBackdrop).hazeSource(menuHazeState),
+                                    modifier = Modifier.fillMaxSize().hazeSource(menuHazeState),
                                 ) {
                                     var transitionDirection =
                                         AnimatedContentTransitionScope.SlideDirection.Left
@@ -2655,6 +2655,7 @@ class MainActivity : ComponentActivity() {
                                         },
                                         modifier =
                                             Modifier
+                                                .layerBackdrop(rootBackdrop)
                                                 .hazeSource(floatingBarsHazeState)
                                                 .then(
                                                     if (isTvDevice) {

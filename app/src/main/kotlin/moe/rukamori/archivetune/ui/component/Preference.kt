@@ -19,6 +19,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -275,12 +278,15 @@ fun PreferenceEntry(
                     vertical = if (inGroup) 0.dp else 3.dp,
                 ).then(
                     if (config.enabled) {
-                        Modifier.liquidGlass(
+                        Modifier.border(
+                            width = 1.dp,
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.White.copy(alpha = 0.22f),
+                                    Color.White.copy(alpha = 0.06f),
+                                ),
+                            ),
                             shape = resolvedShape,
-                            backdrop = backdrop,
-                            config = config,
-                            tintColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                            borderAlpha = 0.22f,
                         )
                     } else Modifier
                 ).graphicsLayer {
@@ -851,20 +857,9 @@ fun SwitchPreference(
         description = description,
         icon = icon,
         trailingContent = {
-            val switchConfig = LocalLiquidGlassConfig.current
-            val switchBackdrop = LocalBackdrop.current
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
-                modifier = if (switchConfig.enabled) {
-                    Modifier.liquidGlass(
-                        shape = CircleShape,
-                        backdrop = switchBackdrop,
-                        config = switchConfig,
-                        tintColor = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-                        borderAlpha = 0.35f,
-                    )
-                } else Modifier,
                 enabled = isEnabled,
                 thumbContent = {
                     AnimatedContent(

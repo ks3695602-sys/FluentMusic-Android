@@ -94,8 +94,14 @@ fun FloatingNavigationToolbar(
                 bottomEnd = lerp(FloatingBarStandaloneCornerRadius.value, FloatingBarOuterCornerRadius.value, miniPlayerProximity).dp,
             )
         }
+    val isLiquidGlassEnabled = moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig.current.enabled
+    val effectiveBackgroundStyle = if (isLiquidGlassEnabled && backgroundStyle == NavigationBarBackgroundStyle.THEME) {
+        NavigationBarBackgroundStyle.GLASS
+    } else {
+        backgroundStyle
+    }
     val navigationContainerColor =
-        if (backgroundStyle == NavigationBarBackgroundStyle.THEME) {
+        if (effectiveBackgroundStyle == NavigationBarBackgroundStyle.THEME) {
             if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer
         } else {
             Color.Transparent
@@ -130,14 +136,14 @@ fun FloatingNavigationToolbar(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    if (backgroundStyle == NavigationBarBackgroundStyle.GLASS) {
+                    if (effectiveBackgroundStyle == NavigationBarBackgroundStyle.GLASS) {
                         FloatingBarGlassBackground(
                             hazeState = hazeState,
                             shape = navigationShape,
                             pureBlack = pureBlack,
                             modifier = Modifier.fillMaxSize(),
                         )
-                    } else if (backgroundStyle != NavigationBarBackgroundStyle.THEME) {
+                    } else if (effectiveBackgroundStyle != NavigationBarBackgroundStyle.THEME) {
                         FloatingBarBlurBackground(
                             hazeState = hazeState,
                             isAcrylic = backgroundStyle == NavigationBarBackgroundStyle.ACRYLIC,
