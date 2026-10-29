@@ -47,6 +47,9 @@ import moe.rukamori.archivetune.extensions.togglePlayPause
 import moe.rukamori.archivetune.innertube.models.*
 import moe.rukamori.archivetune.models.toMediaMetadata
 import moe.rukamori.archivetune.playback.queues.YouTubeQueue
+import androidx.compose.ui.unit.sp
+import moe.rukamori.archivetune.ui.component.ExploreFeaturedHeroBanner
+import moe.rukamori.archivetune.ui.component.ExploreCompactTrackRow
 import moe.rukamori.archivetune.ui.component.LocalMenuState
 import moe.rukamori.archivetune.ui.component.NavigationTitle
 import moe.rukamori.archivetune.ui.component.YouTubeGridItem
@@ -227,7 +230,7 @@ fun ExploreScreen(
                 if (featuredRelease != null) {
                     ExploreFeaturedHeroBanner(
                         title = featuredRelease.title,
-                        subtitle = featuredRelease.authors?.joinToString { it.name } ?: stringResource(R.string.new_releases),
+                        subtitle = featuredRelease.artists?.joinToString { it.name } ?: stringResource(R.string.new_releases),
                         category = "FEATURED PLAYLIST",
                         caption = stringResource(R.string.new_releases),
                         thumbnailUrl = featuredRelease.thumbnail,

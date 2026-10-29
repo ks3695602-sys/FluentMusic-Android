@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import moe.rukamori.archivetune.R
 import moe.rukamori.archivetune.constants.LibraryFilter
-import moe.rukamori.archivetune.db.entities.PlaylistWithSongs
 import moe.rukamori.archivetune.models.MediaMetadata
 import moe.rukamori.archivetune.ui.component.liquidglass.drizlLiquidGlass
 

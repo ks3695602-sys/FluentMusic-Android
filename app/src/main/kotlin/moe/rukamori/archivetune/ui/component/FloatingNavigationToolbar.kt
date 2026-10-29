@@ -102,7 +102,6 @@ fun FloatingNavigationToolbar(
                 bottomEnd = lerp(FloatingBarStandaloneCornerRadius.value, FloatingBarOuterCornerRadius.value, miniPlayerProximity).dp,
             )
         }
-    val isLiquidGlassEnabled = moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig.current.enabled
     val effectiveBackgroundStyle = if (isLiquidGlassEnabled && backgroundStyle == NavigationBarBackgroundStyle.THEME) {
         NavigationBarBackgroundStyle.GLASS
     } else {

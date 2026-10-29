@@ -48,6 +48,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import moe.rukamori.archivetune.LocalPlayerConnection
 import moe.rukamori.archivetune.constants.MiniPlayerBackgroundStyle
+import moe.rukamori.archivetune.ui.component.liquidglass.drizlLiquidGlass
 import moe.rukamori.archivetune.constants.MiniPlayerBackgroundStyleKey
 import moe.rukamori.archivetune.constants.FloatingBarJunctionCornerRadius
 import moe.rukamori.archivetune.constants.FloatingBarOuterCornerRadius
@@ -336,7 +337,7 @@ private fun MiniPlayerBackground(
             val isLiquidGlassEnabled = moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig.current.enabled
             if (isLiquidGlassEnabled) {
                 Box(
-                    modifier = modifier.moe.rukamori.archivetune.ui.component.liquidglass.drizlLiquidGlass(
+                    modifier = modifier.drizlLiquidGlass(
                         shape = shape,
                         refraction = 0.22f,
                         glint = 0.8f,
