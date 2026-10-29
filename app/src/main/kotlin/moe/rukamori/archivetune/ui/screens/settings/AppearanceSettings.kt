@@ -892,7 +892,7 @@ fun AppearanceSettings(navController: NavController) {
                                 Slider(
                                     value = liquidGlassBlurRadius,
                                     onValueChange = onLiquidGlassBlurRadiusChange,
-                                    valueRange = 0f..32f,
+                                    valueRange = 0f..48f,
                                     enabled = liquidGlassEnabled,
                                     modifier = Modifier.fillMaxWidth(),
                                 )

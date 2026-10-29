@@ -260,7 +260,7 @@ private fun AppleMusicNavigationItem(
                     contentDescription = null,
                     tint = tint.value,
                     modifier = Modifier
-                        .size(22.dp)
+                        .size(20.dp)
                         .graphicsLayer {
                             scaleX = scale.value
                             scaleY = scale.value

@@ -256,6 +256,7 @@ import moe.rukamori.archivetune.utils.NetworkConnectivityObserver
 import moe.rukamori.archivetune.utils.StreamClientUtils
 import moe.rukamori.archivetune.utils.SyncUtils
 import moe.rukamori.archivetune.utils.YTPlayerUtils
+import moe.rukamori.archivetune.utils.PlayerClient
 import moe.rukamori.archivetune.utils.dataStore
 import moe.rukamori.archivetune.utils.enumPreference
 import moe.rukamori.archivetune.utils.get
@@ -8099,12 +8100,13 @@ class MusicService :
         scope.launch(Dispatchers.IO) { recoverSong(mediaId, nonNullPlayback) }
 
         val streamUrl = nonNullPlayback.streamUrl
+        val clientHeaders = PlayerClient.forStreamUrl(streamUrl).mediaHeaders()
 
         val resolvedDataSpec =
             dataSpec
                 .buildUpon()
                 .setUri(streamUrl.toUri())
-                .setHttpRequestHeaders(dataSpec.httpRequestHeaders + resolvedRequestHeaders)
+                .setHttpRequestHeaders(dataSpec.httpRequestHeaders + resolvedRequestHeaders + clientHeaders)
                 .build()
         if (resolvedContentLength > 0L && dataSpec.position == resolvedContentLength) {
             return resolvedDataSpec.buildUpon().setLength(C.LENGTH_UNSET.toLong()).build()
@@ -8968,7 +8970,7 @@ class MusicService :
         private const val TOGETHER_HOST_INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000L
         const val ERROR_CODE_NO_STREAM = 1000001
         private const val PLAYBACK_FORMAT_ID_METADATA_KEY = "archivetune_playback_format_id"
-        const val CHUNK_LENGTH = 8 * 1024 * 1024L
+        const val CHUNK_LENGTH = 1024 * 1024L
         val RETRYABLE_STREAM_RESPONSE_CODES = setOf(403, 404, 410, 416)
         const val PERSISTENT_QUEUE_FILE = "persistent_queue.data"
         const val PERSISTENT_AUTOMIX_FILE = "persistent_automix.data"
@@ -8997,14 +8999,14 @@ class MusicService :
         const val CROSSFADE_HANDOFF_DURATION_MS = 96L
         const val CROSSFADE_HANDOFF_FRAME_MS = 8L
         const val CROSSFADE_HANDOFF_POLL_MS = 10L
-        const val CROSSFADE_MIN_BUFFER_BEFORE_START_MS = 5_000L
-        const val CROSSFADE_MAX_BUFFER_BEFORE_START_MS = 12_500L
-        const val PRIMARY_MIN_BUFFER_MS = 20_000
-        const val PRIMARY_MAX_BUFFER_MS = 60_000
-        const val PRIMARY_BUFFER_FOR_PLAYBACK_MS = 750
-        const val PRIMARY_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS = 2_500
-        const val CROSSFADE_MIN_BUFFER_MS = 15_000
-        const val CROSSFADE_MAX_BUFFER_MS = 45_000
+        const val CROSSFADE_MIN_BUFFER_BEFORE_START_MS = 500L
+        const val CROSSFADE_MAX_BUFFER_BEFORE_START_MS = 5_000L
+        const val PRIMARY_MIN_BUFFER_MS = 120_000
+        const val PRIMARY_MAX_BUFFER_MS = 360_000
+        const val PRIMARY_BUFFER_FOR_PLAYBACK_MS = 150
+        const val PRIMARY_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS = 500
+        const val CROSSFADE_MIN_BUFFER_MS = 60_000
+        const val CROSSFADE_MAX_BUFFER_MS = 180_000
         const val CROSSFADE_FRAME_MS = 32L
         const val MIN_AUDIBLE_EFFECTIVE_VOLUME = 0.01f
         const val STUCK_MUTED_VOLUME_EPSILON = 0.001f
