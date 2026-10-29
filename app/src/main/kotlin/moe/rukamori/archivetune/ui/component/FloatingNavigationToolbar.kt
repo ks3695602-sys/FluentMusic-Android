@@ -78,7 +78,8 @@ fun FloatingNavigationToolbar(
     onItemClick: (Screens, Boolean) -> Unit,
     onSearchItemDoubleClick: (() -> Unit)? = null,
 ) {
-    if (navigationBarMode == NavigationBarMode.APPLE_MUSIC) {
+    val isLiquidGlassEnabled = moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig.current.enabled
+    if (navigationBarMode == NavigationBarMode.APPLE_MUSIC || isLiquidGlassEnabled) {
         AppleMusicNavigationToolbar(
             items = items,
             pureBlack = pureBlack,

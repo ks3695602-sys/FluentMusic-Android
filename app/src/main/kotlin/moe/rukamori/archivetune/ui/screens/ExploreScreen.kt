@@ -222,7 +222,80 @@ fun ExploreScreen(
                     }
                 }
             } else {
-                chartsPage?.sections?.filter { it.title != "Top music videos" }?.forEach { section ->
+                // iOS 26 Featured Hero Banner
+                val featuredRelease = explorePage?.newReleaseAlbums?.firstOrNull()
+                if (featuredRelease != null) {
+                    ExploreFeaturedHeroBanner(
+                        title = featuredRelease.title,
+                        subtitle = featuredRelease.authors?.joinToString { it.name } ?: stringResource(R.string.new_releases),
+                        category = "FEATURED PLAYLIST",
+                        caption = stringResource(R.string.new_releases),
+                        thumbnailUrl = featuredRelease.thumbnail,
+                        onClick = { navController.navigateToAlbum(featuredRelease.id) },
+                    )
+                }
+
+                // iOS 26 Latest Songs Section
+                val trendingSongs = chartsPage?.sections?.firstOrNull { it.title == "Trending" || it.title == "Charts" }
+                    ?.items?.filterIsInstance<SongItem>()?.take(5) ?: emptyList()
+
+                if (trendingSongs.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "Latest Songs",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                fontSize = 22.sp,
+                            ),
+                            color = MaterialTheme.colorScheme.onBackground,
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.navigate_next),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                            modifier = Modifier.size(24.dp),
+                        )
+                    }
+
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        trendingSongs.forEach { song ->
+                            ExploreCompactTrackRow(
+                                song = song,
+                                isActive = song.id == mediaMetadata?.id,
+                                isPlaying = isPlaying,
+                                onClick = {
+                                    if (song.id == mediaMetadata?.id) {
+                                        playerConnection.player.togglePlayPause()
+                                    } else {
+                                        playerConnection.playQueue(
+                                            YouTubeQueue(
+                                                endpoint = WatchEndpoint(videoId = song.id),
+                                                preloadItem = song.toMediaMetadata(),
+                                            ),
+                                        )
+                                    }
+                                },
+                                onMenuClick = {
+                                    menuState.show {
+                                        YouTubeSongMenu(
+                                            song = song,
+                                            navController = navController,
+                                            onDismiss = menuState::dismiss,
+                                        )
+                                    }
+                                },
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                chartsPage?.sections?.filter { it.title != "Top music videos" && it.title != "Trending" }?.forEach { section ->
                     NavigationTitle(
                         title =
                             when (section.title) {

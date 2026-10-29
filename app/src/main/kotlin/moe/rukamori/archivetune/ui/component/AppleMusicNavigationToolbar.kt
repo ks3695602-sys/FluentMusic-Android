@@ -3,18 +3,22 @@
  * © Rukamori — github.com/rukamori
  * GPL-3.0 License | Contributors: see git history
  * Do not remove or alter this notice. - Per GPL-3.0 Section 4 & Section 5
+ * Liquid Glass Dock: DrizL Inc. Engine (Ported to AGSL)
  */
-
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
 package moe.rukamori.archivetune.ui.component
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -30,10 +34,11 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
@@ -44,6 +49,8 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,11 +59,16 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import dev.chrisbanes.haze.HazeState
 import moe.rukamori.archivetune.LocalAnimationsDisabled
 import moe.rukamori.archivetune.constants.NavigationBarHeight
 import moe.rukamori.archivetune.constants.NavigationBarMaxWidth
+import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
+import moe.rukamori.archivetune.ui.component.liquidglass.drizlLiquidGlass
 import moe.rukamori.archivetune.ui.screens.Screens
+
+private val AppleRedAccent = Color(0xFFFA2D48)
 
 @Composable
 internal fun AppleMusicNavigationToolbar(
@@ -73,18 +85,27 @@ internal fun AppleMusicNavigationToolbar(
     val shape = remember { RoundedCornerShape(percent = 50) }
     val selectedIndex = groupedItems.indexOfFirst(isSelected)
     val animationsDisabled = LocalAnimationsDisabled.current
-    val motionScheme = MaterialTheme.motionScheme
+    val isLiquidGlassEnabled = LocalLiquidGlassConfig.current.enabled
+
     val indicatorPosition = animateFloatAsState(
         targetValue = selectedIndex.coerceAtLeast(0).toFloat(),
-        animationSpec = if (animationsDisabled) snap() else motionScheme.fastSpatialSpec(),
+        animationSpec = if (animationsDisabled) snap() else spring(
+            dampingRatio = 0.75f,
+            stiffness = Spring.StiffnessLow,
+        ),
         label = "appleMusicSelectionPosition",
     )
     val indicatorAlpha = animateFloatAsState(
         targetValue = if (selectedIndex >= 0) 1f else 0f,
-        animationSpec = if (animationsDisabled) snap() else motionScheme.fastEffectsSpec(),
+        animationSpec = if (animationsDisabled) snap() else spring(
+            dampingRatio = 0.75f,
+            stiffness = Spring.StiffnessLow,
+        ),
         label = "appleMusicSelectionAlpha",
     )
-    val indicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+
+    val activeIndicatorColor = AppleRedAccent.copy(alpha = 0.16f)
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -100,18 +121,37 @@ internal fun AppleMusicNavigationToolbar(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // Main Navigation Pill
             if (groupedItems.isNotEmpty()) {
-                Box(modifier = Modifier.weight(1f).fillMaxHeight().clip(shape)) {
-                    FloatingBarGlassBackground(
-                        hazeState = hazeState,
-                        shape = shape,
-                        pureBlack = pureBlack,
-                        modifier = Modifier.fillMaxSize(),
-                    )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .then(
+                            if (isLiquidGlassEnabled) {
+                                Modifier.drizlLiquidGlass(
+                                    shape = shape,
+                                    refraction = 0.18f,
+                                    glint = 0.7f,
+                                    tintColor = Color.White.copy(alpha = 0.04f),
+                                )
+                            } else {
+                                Modifier.clip(shape)
+                            }
+                        ),
+                ) {
+                    if (!isLiquidGlassEnabled) {
+                        FloatingBarGlassBackground(
+                            hazeState = hazeState,
+                            shape = shape,
+                            pureBlack = pureBlack,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(5.dp)
+                            .padding(horizontal = 4.dp, vertical = 4.dp)
                             .drawWithCache {
                                 val itemWidth = size.width / groupedItems.size
                                 val radius = CornerRadius(size.height / 2f)
@@ -122,10 +162,11 @@ internal fun AppleMusicNavigationToolbar(
                                     } else {
                                         size.width - (position + 1f) * itemWidth
                                     }
+                                    // Fluid indicator pill background
                                     drawRoundRect(
-                                        color = indicatorColor,
-                                        topLeft = Offset(left, 0f),
-                                        size = Size(itemWidth, size.height),
+                                        color = activeIndicatorColor,
+                                        topLeft = Offset(left + 2f, 2f),
+                                        size = Size(itemWidth - 4f, size.height - 4f),
                                         cornerRadius = radius,
                                         alpha = indicatorAlpha.value,
                                     )
@@ -146,18 +187,38 @@ internal fun AppleMusicNavigationToolbar(
                     }
                 }
             }
+
+            // Standalone Circular Search Lens Bubble
             if (hasSearch) {
-                Box(modifier = Modifier.size(NavigationBarHeight).clip(shape)) {
-                    FloatingBarGlassBackground(
-                        hazeState = hazeState,
-                        shape = shape,
-                        pureBlack = pureBlack,
-                        modifier = Modifier.fillMaxSize(),
-                    )
+                Box(
+                    modifier = Modifier
+                        .size(NavigationBarHeight)
+                        .then(
+                            if (isLiquidGlassEnabled) {
+                                Modifier.drizlLiquidGlass(
+                                    shape = CircleShape,
+                                    refraction = 0.22f,
+                                    glint = 0.85f,
+                                    tintColor = Color.White.copy(alpha = 0.05f),
+                                )
+                            } else {
+                                Modifier.clip(shape)
+                            }
+                        ),
+                ) {
+                    if (!isLiquidGlassEnabled) {
+                        FloatingBarGlassBackground(
+                            hazeState = hazeState,
+                            shape = shape,
+                            pureBlack = pureBlack,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
                     AppleMusicNavigationItem(
                         screen = Screens.Search,
                         selected = isSelected(Screens.Search),
                         modifier = Modifier.fillMaxSize(),
+                        isSearchCircle = true,
                         onItemClick = onItemClick,
                         onSearchItemDoubleClick = onSearchItemDoubleClick,
                     )
@@ -172,24 +233,31 @@ private fun AppleMusicNavigationItem(
     screen: Screens,
     selected: Boolean,
     modifier: Modifier,
+    isSearchCircle: Boolean = false,
     onItemClick: (Screens, Boolean) -> Unit,
     onSearchItemDoubleClick: (() -> Unit)?,
 ) {
     val animationsDisabled = LocalAnimationsDisabled.current
-    val motionScheme = MaterialTheme.motionScheme
     val tint = animateColorAsState(
-        targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-        animationSpec = if (animationsDisabled) snap() else motionScheme.fastEffectsSpec(),
+        targetValue = if (selected) AppleRedAccent else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f),
+        animationSpec = if (animationsDisabled) snap() else spring(
+            dampingRatio = 0.75f,
+            stiffness = Spring.StiffnessLow,
+        ),
         label = "appleMusicItemTint",
     )
     val scale = animateFloatAsState(
-        targetValue = if (selected) 1.08f else 1f,
-        animationSpec = if (animationsDisabled) snap() else motionScheme.fastSpatialSpec(),
+        targetValue = if (selected) 1.05f else 1f,
+        animationSpec = if (animationsDisabled) snap() else spring(
+            dampingRatio = 0.75f,
+            stiffness = Spring.StiffnessLow,
+        ),
         label = "appleMusicItemScale",
     )
     val shape = remember { RoundedCornerShape(percent = 50) }
     val onClick = rememberNavigationItemClick(screen, selected, onItemClick, onSearchItemDoubleClick)
     val title = stringResource(screen.titleId)
+
     Box(
         modifier = modifier
             .clip(shape)
@@ -197,20 +265,42 @@ private fun AppleMusicNavigationItem(
             .semantics { contentDescription = title },
         contentAlignment = Alignment.Center,
     ) {
-        Crossfade(
-            targetState = selected,
-            animationSpec = if (animationsDisabled) snap() else motionScheme.fastEffectsSpec(),
-            label = "appleMusicItemIcon",
-        ) { active ->
+        if (isSearchCircle) {
             Icon(
-                painter = painterResource(if (active) screen.iconIdActive else screen.iconIdInactive),
+                painter = painterResource(if (selected) screen.iconIdActive else screen.iconIdInactive),
                 contentDescription = null,
                 tint = tint.value,
-                modifier = Modifier.size(32.dp).graphicsLayer {
-                    scaleX = scale.value
-                    scaleY = scale.value
-                },
+                modifier = Modifier
+                    .size(24.dp)
+                    .graphicsLayer {
+                        scaleX = scale.value
+                        scaleY = scale.value
+                    },
             )
+        } else {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(vertical = 2.dp),
+            ) {
+                Icon(
+                    painter = painterResource(if (selected) screen.iconIdActive else screen.iconIdInactive),
+                    contentDescription = null,
+                    tint = tint.value,
+                    modifier = Modifier
+                        .size(22.dp)
+                        .graphicsLayer {
+                            scaleX = scale.value
+                            scaleY = scale.value
+                        },
+                )
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    fontSize = 10.sp,
+                    color = tint.value,
+                )
+            }
         }
     }
 }

@@ -182,6 +182,33 @@ fun LibraryMixScreen(
             .asPaddingValues()
             .calculateBottomPadding() + 12.dp
 
+    val sixGridItems = remember(recentSongs, visiblePlaylists) {
+        val items = mutableListOf<LibraryGridItem>()
+        visiblePlaylists.take(6).forEach { playlist ->
+            items.add(
+                LibraryGridItem(
+                    title = playlist.playlist.name,
+                    thumbnailUrl = playlist.playlist.thumbnailUrl ?: playlist.thumbnails.firstOrNull(),
+                    onClick = { navController.navigate("local_playlist/${playlist.id}") },
+                )
+            )
+        }
+        if (items.size < 6) {
+            recentSongs.take(6 - items.size).forEach { song ->
+                items.add(
+                    LibraryGridItem(
+                        title = song.song.title,
+                        thumbnailUrl = song.song.thumbnailUrl,
+                        onClick = {
+                            playerConnection.playQueue(ListQueue(items = listOf(song.toMediaItem())))
+                        },
+                    )
+                )
+            }
+        }
+        items
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         ExpressivePullToRefreshBox(
             isRefreshing = refreshState is LibraryRefreshState.Loading,
@@ -229,95 +256,15 @@ fun LibraryMixScreen(
                     }
                 }
 
-                // 2. Shortcuts Grid
-                item(key = "shortcuts_grid", contentType = "shortcuts_grid") {
-                    Column(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 24.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            // Liked Songs
-                            ShortcutCard(
-                                title = stringResource(R.string.liked_songs),
-                                countText = "$likedSongsCount ${stringResource(R.string.tracks_label)}",
-                                iconRes = R.drawable.favorite,
-                                containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.6f),
-                                iconColor = MaterialTheme.colorScheme.error,
-                                modifier = Modifier.weight(1f),
-                                onClick = { navController.navigate("auto_playlist/liked") },
-                            )
-
-                            // Offline/Downloaded
-                            ShortcutCard(
-                                title = stringResource(R.string.offline_shortcut),
-                                countText = stringResource(R.string.downloaded_desc),
-                                iconRes = R.drawable.offline,
-                                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
-                                iconColor = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.weight(1f),
-                                onClick = { navController.navigate("auto_playlist/downloaded") },
-                            )
-                        }
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            // Cached
-                            ShortcutCard(
-                                title = stringResource(R.string.cached),
-                                countText = stringResource(R.string.instant_playback),
-                                iconRes = R.drawable.cached,
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.6f),
-                                iconColor = MaterialTheme.colorScheme.tertiary,
-                                modifier = Modifier.weight(1f),
-                                onClick = { navController.navigate("cache_playlist/cached") },
-                            )
-
-                            // Local Files
-                            ShortcutCard(
-                                title = stringResource(R.string.local_files),
-                                countText = stringResource(R.string.on_device),
-                                iconRes = R.drawable.snippet_folder,
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
-                                iconColor = MaterialTheme.colorScheme.secondary,
-                                modifier = Modifier.weight(1f),
-                                onClick = { navController.navigate("local_songs") },
-                            )
-                        }
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            ShortcutCard(
-                                title = topPlaylistTitle,
-                                countText = stringResource(R.string.all_time),
-                                iconRes = R.drawable.trending_up,
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
-                                iconColor = MaterialTheme.colorScheme.secondary,
-                                modifier = Modifier.weight(1f),
-                                onClick = { navController.navigate("top_playlist/$topSize") },
-                            )
-
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
+                // 2. iOS 26 6-Grid Quick Access & Category Navigation Rows
+                if (sixGridItems.isNotEmpty()) {
+                    item(key = "library_six_grid", contentType = "six_grid") {
+                        LibrarySixGridSection(items = sixGridItems)
                     }
                 }
 
-                if (supportArchiveTuneAvailable) {
-                    item(key = "support_archive_tune", contentType = "support_ad") {
-                        SupportArchiveTuneSection(
-                            onMessage = showMessage,
-                            modifier = Modifier.padding(horizontal = 24.dp),
-                        )
-                    }
+                item(key = "library_category_rows", contentType = "category_rows") {
+                    LibraryCategoryNavigationList(onCategoryClick = onTabSelected)
                 }
 
                 // 3. Recently Played Horizontal Row
