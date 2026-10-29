@@ -196,14 +196,13 @@ fun TopSearch(
                     .fillMaxWidth()
                     .height(topInset + AppBarHeight)
                     .background(
-                        color = if (config.enabled) MaterialTheme.colorScheme.surface.copy(alpha = 0.65f)
-                        else MaterialTheme.colorScheme.surface
+                        color = MaterialTheme.colorScheme.surface
                     ),
         )
 
         Surface(
             shape = animatedShape,
-            color = if (config.enabled) colors.containerColor.copy(alpha = config.tintAlpha) else colors.containerColor,
+            color = colors.containerColor,
             contentColor = contentColorFor(colors.containerColor),
             tonalElevation = tonalElevation,
             modifier =

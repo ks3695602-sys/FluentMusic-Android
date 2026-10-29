@@ -72,8 +72,9 @@ fun Modifier.hazeMeniscusGlass(
         .then(
             if (hazeState != null) {
                 val hazeInput = HazeInput.Sources(hazeState)
+                val roundedShape = (shape as? RoundedCornerShape) ?: RoundedCornerShape(26.dp)
                 val glassStyle = GlassStyle.clear.then {
-                    shape(shape)
+                    shape(roundedShape)
                     backgroundColor(if (tintColor.isSpecified) tintColor else Color.Black)
                     tint(if (tintColor.isSpecified) tintColor.copy(alpha = 0.18f) else Color.White.copy(alpha = 0.06f))
                     whitePoint(0.06f)
