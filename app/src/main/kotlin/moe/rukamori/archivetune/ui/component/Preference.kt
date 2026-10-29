@@ -9,8 +9,6 @@
 
 package moe.rukamori.archivetune.ui.component
 
-import moe.rukamori.archivetune.ui.component.liquidglass.LiquidToggle
-import moe.rukamori.archivetune.ui.component.liquidglass.LiquidSlider
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Spring
@@ -106,8 +104,6 @@ import moe.rukamori.archivetune.constants.HISTORY_DURATION_DEFAULT
 import moe.rukamori.archivetune.constants.HISTORY_DURATION_RANGE
 import kotlin.math.roundToInt
 import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
-import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
-import moe.rukamori.archivetune.ui.component.liquidglass.liquidGlass
 
 val LocalPreferenceInGroup = compositionLocalOf { false }
 
@@ -264,7 +260,6 @@ fun PreferenceEntry(
     }
 
     val config = LocalLiquidGlassConfig.current
-    val backdrop = LocalBackdrop.current
 
     Card(
         shape = resolvedShape,
@@ -860,15 +855,7 @@ fun SwitchPreference(
         description = description,
         icon = icon,
         trailingContent = {
-            val config = LocalLiquidGlassConfig.current
-            if (config.enabled) {
-                LiquidToggle(
-                    selected = { checked },
-                    onSelect = onCheckedChange,
-                    backdrop = null,
-                )
-            } else {
-                Switch(
+            Switch(
                     checked = checked,
                     onCheckedChange = onCheckedChange,
                     enabled = isEnabled,
@@ -900,7 +887,6 @@ fun SwitchPreference(
                             uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant,
                         ),
                 )
-            }
         },
         onClick = { onCheckedChange(!checked) },
         isEnabled = isEnabled,

@@ -65,7 +65,7 @@ import moe.rukamori.archivetune.LocalAnimationsDisabled
 import moe.rukamori.archivetune.constants.NavigationBarHeight
 import moe.rukamori.archivetune.constants.NavigationBarMaxWidth
 import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
-import moe.rukamori.archivetune.ui.component.liquidglass.drizlLiquidGlass
+import moe.rukamori.archivetune.ui.component.liquidglass.hazeMeniscusGlass
 import moe.rukamori.archivetune.ui.screens.Screens
 
 private val AppleRedAccent = Color(0xFFFA2D48)
@@ -127,27 +127,13 @@ internal fun AppleMusicNavigationToolbar(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .then(
-                            if (isLiquidGlassEnabled) {
-                                Modifier.drizlLiquidGlass(
-                                    shape = shape,
-                                    refraction = 0.18f,
-                                    glint = 0.7f,
-                                    tintColor = Color.White.copy(alpha = 0.04f),
-                                )
-                            } else {
-                                Modifier.clip(shape)
-                            }
+                        .hazeMeniscusGlass(
+                            shape = shape,
+                            hazeState = hazeState,
+                            tintColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainerHigh,
+                            glint = 0.8f,
                         ),
                 ) {
-                    if (!isLiquidGlassEnabled) {
-                        FloatingBarGlassBackground(
-                            hazeState = hazeState,
-                            shape = shape,
-                            pureBlack = pureBlack,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
@@ -193,27 +179,13 @@ internal fun AppleMusicNavigationToolbar(
                 Box(
                     modifier = Modifier
                         .size(NavigationBarHeight)
-                        .then(
-                            if (isLiquidGlassEnabled) {
-                                Modifier.drizlLiquidGlass(
-                                    shape = CircleShape,
-                                    refraction = 0.22f,
-                                    glint = 0.85f,
-                                    tintColor = Color.White.copy(alpha = 0.05f),
-                                )
-                            } else {
-                                Modifier.clip(shape)
-                            }
+                        .hazeMeniscusGlass(
+                            shape = CircleShape,
+                            hazeState = hazeState,
+                            tintColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainerHigh,
+                            glint = 0.85f,
                         ),
                 ) {
-                    if (!isLiquidGlassEnabled) {
-                        FloatingBarGlassBackground(
-                            hazeState = hazeState,
-                            shape = shape,
-                            pureBlack = pureBlack,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
                     AppleMusicNavigationItem(
                         screen = Screens.Search,
                         selected = isSelected(Screens.Search),

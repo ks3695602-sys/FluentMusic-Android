@@ -38,10 +38,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
-import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
-import moe.rukamori.archivetune.ui.component.liquidglass.liquidGlass
-import moe.rukamori.archivetune.ui.component.liquidglass.LiquidButton
 
 @Composable
 fun ResizableIconButton(
@@ -78,28 +74,7 @@ fun IconButton(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit,
 ) {
-    val config = LocalLiquidGlassConfig.current
 
-    if (config.enabled) {
-        val buttonTint = if (colors.containerColor != Color.Transparent) {
-            colors.containerColor.copy(alpha = 0.28f)
-        } else {
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.22f)
-        }
-        LiquidButton(
-            onClick = onClick,
-            onLongClick = onLongClick,
-            shape = CircleShape,
-            isInteractive = enabled,
-            tint = buttonTint,
-            surfaceColor = Color.White.copy(alpha = 0.05f),
-            height = 48.dp,
-            modifier = modifier.minimumInteractiveComponentSize().sizeIn(minWidth = 48.dp, minHeight = 48.dp),
-        ) {
-            val contentColor = colors.contentColor
-            CompositionLocalProvider(LocalContentColor provides contentColor, content = content)
-        }
-    } else {
         Box(
             modifier =
                 modifier
@@ -125,4 +100,3 @@ fun IconButton(
             CompositionLocalProvider(LocalContentColor provides contentColor, content = content)
         }
     }
-}

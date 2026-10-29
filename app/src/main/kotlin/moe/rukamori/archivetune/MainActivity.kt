@@ -239,13 +239,10 @@ import moe.rukamori.archivetune.constants.LiquidGlassBlurRadiusKey
 import moe.rukamori.archivetune.constants.LiquidGlassRefractionKey
 import moe.rukamori.archivetune.constants.LiquidGlassTintAlphaKey
 import moe.rukamori.archivetune.ui.component.liquidglass.LiquidGlassConfig
-import com.kyant.backdrop.backdrops.layerBackdrop
-import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import moe.rukamori.archivetune.constants.LiquidGlassCornerRadiusKey
 import moe.rukamori.archivetune.constants.LiquidGlassRefractionHeightKey
 import moe.rukamori.archivetune.constants.LiquidGlassRefractionAmountKey
 import moe.rukamori.archivetune.constants.LiquidGlassChromaticAberrationKey
-import moe.rukamori.archivetune.ui.component.liquidglass.LocalBackdrop
 import moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig
 import androidx.compose.ui.unit.dp
 import moe.rukamori.archivetune.constants.RemindAfterKey
@@ -853,7 +850,6 @@ class MainActivity : ComponentActivity() {
             val liquidGlassChromaticAberration by rememberPreference(LiquidGlassChromaticAberrationKey, defaultValue = true)
             val liquidGlassTintAlpha by rememberPreference(LiquidGlassTintAlphaKey, defaultValue = 0.22f)
 
-            val rootBackdrop = rememberLayerBackdrop()
 
             val liquidGlassConfig = remember(
                 liquidGlassEnabled,
@@ -1765,7 +1761,6 @@ class MainActivity : ComponentActivity() {
                         moe.rukamori.archivetune.ui.component.LocalBottomSheetPageState provides bottomSheetPageState,
                         moe.rukamori.archivetune.ui.component.LocalMenuState provides menuState,
                         LocalLiquidGlassConfig provides liquidGlassConfig,
-                        LocalBackdrop provides rootBackdrop,
                     ) {
                         CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides screenBackDispatcherOwner) {
                             Row {
@@ -2258,7 +2253,7 @@ class MainActivity : ComponentActivity() {
                                                     modifier =
                                                         Modifier
                                                             .fillMaxSize()
-                                                            .layerBackdrop(rootBackdrop).hazeSource(floatingBarsHazeState, zIndex = 1f)
+                                                            .hazeSource(floatingBarsHazeState, zIndex = 1f)
                                                             .padding(
                                                                 bottom = if (!playerBottomSheetState.isDismissed) MiniPlayerHeight else 0.dp,
                                                             ).navigationBarsPadding(),
@@ -2655,7 +2650,6 @@ class MainActivity : ComponentActivity() {
                                         },
                                         modifier =
                                             Modifier
-                                                .layerBackdrop(rootBackdrop)
                                                 .hazeSource(floatingBarsHazeState)
                                                 .then(
                                                     if (isTvDevice) {

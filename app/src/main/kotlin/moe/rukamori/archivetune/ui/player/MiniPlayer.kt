@@ -334,24 +334,12 @@ private fun MiniPlayerBackground(
         }
 
         MiniPlayerBackgroundStyle.GLASS -> {
-            val isLiquidGlassEnabled = moe.rukamori.archivetune.ui.component.liquidglass.LocalLiquidGlassConfig.current.enabled
-            if (isLiquidGlassEnabled) {
-                Box(
-                    modifier = modifier.drizlLiquidGlass(
-                        shape = shape,
-                        refraction = 0.22f,
-                        glint = 0.8f,
-                        tintColor = Color.White.copy(alpha = 0.05f),
-                    ),
-                )
-            } else {
-                FloatingBarGlassBackground(
-                    hazeState = hazeState,
-                    shape = shape,
-                    pureBlack = pureBlack,
-                    modifier = modifier,
-                )
-            }
+            FloatingBarGlassBackground(
+                hazeState = hazeState,
+                shape = shape,
+                pureBlack = pureBlack,
+                modifier = modifier,
+            )
         }
 
         MiniPlayerBackgroundStyle.GRADIENT -> {
