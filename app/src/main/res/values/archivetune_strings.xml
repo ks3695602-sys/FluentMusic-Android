@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="explore">Explore</string>
+    <string name="explore">New</string>
     <string name="suggestions">Suggestions</string>
     <string name="music_recognition_tap_to_listen">Tap to listen</string>
     <string name="music_recognition_whats_playing">What’s playing?</string>
