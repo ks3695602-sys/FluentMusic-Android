@@ -47,6 +47,21 @@ fun FormatEntity.codecLabel(): String {
     }
 }
 
+fun FormatEntity.losslessBadge(): String? {
+    val isLosslessCodec = codecs.contains("flac", ignoreCase = true) ||
+        codecs.contains("alac", ignoreCase = true) ||
+        mimeType.contains("flac", ignoreCase = true) ||
+        mimeType.contains("alac", ignoreCase = true)
+    val isHiRes = (sampleRate ?: 0) >= 48000 || bitrate >= 1000000
+    return when {
+        isLosslessCodec && isHiRes -> "Hi-Res Lossless"
+        isLosslessCodec -> "Lossless"
+        bitrate >= 256000 -> "Lossless"
+        bitrate >= 160000 -> "High Quality"
+        else -> null
+    }
+}
+
 fun FormatEntity.formattedBitrate(): String? = bitrate.takeIf { it > 0 }?.let { "${it / 1000} kbps" }
 
 fun FormatEntity.formattedSampleRate(): String? =

@@ -26,11 +26,18 @@ sealed class Screens(
         route = "home",
     )
 
-    object Search : Screens(
-        titleId = R.string.search,
-        iconIdInactive = R.drawable.search,
-        iconIdActive = R.drawable.search,
-        route = "search",
+    object Explore : Screens(
+        titleId = R.string.explore,
+        iconIdInactive = R.drawable.explore_outlined,
+        iconIdActive = R.drawable.explore_outlined,
+        route = "explore",
+    )
+
+    object Radio : Screens(
+        titleId = R.string.radio,
+        iconIdInactive = R.drawable.radio,
+        iconIdActive = R.drawable.radio,
+        route = "radio",
     )
 
     object Library : Screens(
@@ -38,6 +45,13 @@ sealed class Screens(
         iconIdInactive = R.drawable.library_outlined,
         iconIdActive = R.drawable.library_filled,
         route = "library",
+    )
+
+    object Search : Screens(
+        titleId = R.string.search,
+        iconIdInactive = R.drawable.search,
+        iconIdActive = R.drawable.search,
+        route = "search",
     )
 
     object MoodAndGenres : Screens(
@@ -48,7 +62,7 @@ sealed class Screens(
     )
 
     companion object {
-        val MainScreens = listOf(Home, Search, Library)
+        val MainScreens = listOf(Home, Explore, Radio, Library, Search)
         val TvMainScreens = listOf(Home, Search, Library)
     }
 }

@@ -226,6 +226,19 @@ fun LibraryMixScreen(
                     ),
                 modifier = Modifier.fillMaxSize(),
             ) {
+                // 1. iOS 26 Category Navigation Rows at the Top (Playlists, Artists, Albums, Songs)
+                item(key = "library_category_rows", contentType = "category_rows") {
+                    LibraryCategoryNavigationList(onCategoryClick = onTabSelected)
+                }
+
+                // 2. iOS 26 6-Grid Quick Access
+                if (sixGridItems.isNotEmpty()) {
+                    item(key = "library_six_grid", contentType = "six_grid") {
+                        LibrarySixGridSection(items = sixGridItems)
+                    }
+                }
+
+                // 3. Most Played Spotlight
                 item(key = "most_played_album_spotlight", contentType = "spotlight") {
                     val state = mostPlayedAlbumUiState
                     if (state is MostPlayedAlbumUiState.Success) {
@@ -254,17 +267,6 @@ fun LibraryMixScreen(
                             onShuffle = shuffleAlbum,
                         )
                     }
-                }
-
-                // 2. iOS 26 6-Grid Quick Access & Category Navigation Rows
-                if (sixGridItems.isNotEmpty()) {
-                    item(key = "library_six_grid", contentType = "six_grid") {
-                        LibrarySixGridSection(items = sixGridItems)
-                    }
-                }
-
-                item(key = "library_category_rows", contentType = "category_rows") {
-                    LibraryCategoryNavigationList(onCategoryClick = onTabSelected)
                 }
 
                 // 3. Recently Played Horizontal Row

@@ -37,6 +37,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -2604,28 +2605,46 @@ class MainActivity : ComponentActivity() {
                                                     else -> Screens.Home.route
                                                 }
                                             },
-                                        enterTransition = {
-                                            if (disableAnimations) {
-                                                fadeIn(tween(0))
-                                            } else if (initialState.destination.route in topLevelScreens &&
-                                                targetState.destination.route in topLevelScreens
-                                            ) {
-                                                fadeIn(tween(250))
-                                            } else {
-                                                fadeIn(tween(250)) + slideInHorizontally(animationSpec = tween(250)) { it }
-                                            }
-                                        },
-                                        exitTransition = {
-                                            if (disableAnimations) {
-                                                fadeOut(tween(0))
-                                            } else if (initialState.destination.route in topLevelScreens &&
-                                                targetState.destination.route in topLevelScreens
-                                            ) {
-                                                fadeOut(tween(200))
-                                            } else {
-                                                fadeOut(tween(200)) + slideOutHorizontally(animationSpec = tween(200)) { -it }
-                                            }
-                                        },
+                                         enterTransition = {
+                                             if (disableAnimations) {
+                                                 fadeIn(tween(0))
+                                             } else if (initialState.destination.route in topLevelScreens &&
+                                                 targetState.destination.route in topLevelScreens
+                                             ) {
+                                                 val initialIndex = topLevelScreens.indexOf(initialState.destination.route)
+                                                 val targetIndex = topLevelScreens.indexOf(targetState.destination.route)
+                                                 val isForward = targetIndex > initialIndex
+                                                 slideInHorizontally(
+                                                     animationSpec = spring(
+                                                         dampingRatio = 0.82f,
+                                                         stiffness = Spring.StiffnessMediumLow,
+                                                     ),
+                                                     initialOffsetX = { fullWidth -> if (isForward) fullWidth else -fullWidth }
+                                                 ) + fadeIn(animationSpec = tween(durationMillis = 200))
+                                             } else {
+                                                 fadeIn(tween(250)) + slideInHorizontally(animationSpec = tween(250)) { it }
+                                             }
+                                         },
+                                         exitTransition = {
+                                             if (disableAnimations) {
+                                                 fadeOut(tween(0))
+                                             } else if (initialState.destination.route in topLevelScreens &&
+                                                 targetState.destination.route in topLevelScreens
+                                             ) {
+                                                 val initialIndex = topLevelScreens.indexOf(initialState.destination.route)
+                                                 val targetIndex = topLevelScreens.indexOf(targetState.destination.route)
+                                                 val isForward = targetIndex > initialIndex
+                                                 slideOutHorizontally(
+                                                     animationSpec = spring(
+                                                         dampingRatio = 0.82f,
+                                                         stiffness = Spring.StiffnessMediumLow,
+                                                     ),
+                                                     targetOffsetX = { fullWidth -> if (isForward) -fullWidth else fullWidth }
+                                                 ) + fadeOut(animationSpec = tween(durationMillis = 180))
+                                             } else {
+                                                 fadeOut(tween(200)) + slideOutHorizontally(animationSpec = tween(200)) { -it }
+                                             }
+                                         },
                                         popEnterTransition = backEnterTransition,
                                         popExitTransition = backExitTransition,
                                         predictivePopEnterTransition = { _ ->

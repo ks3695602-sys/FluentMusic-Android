@@ -101,6 +101,12 @@ fun NavGraphBuilder.navigationBuilder(
             headerScrollConnection = homeScrollConnection,
         )
     }
+    composable(Screens.Explore.route) {
+        ExploreScreen(navController = navController)
+    }
+    composable(Screens.Radio.route) {
+        RadioScreen(navController = navController)
+    }
     composable(
         Screens.Library.route,
     ) {

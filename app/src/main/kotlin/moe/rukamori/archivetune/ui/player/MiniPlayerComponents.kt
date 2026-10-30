@@ -9,6 +9,8 @@
 
 package moe.rukamori.archivetune.ui.player
 
+import moe.rukamori.archivetune.db.entities.losslessBadge
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
@@ -289,6 +291,7 @@ fun SwipeableMiniPlayerBox(
 fun RowScope.MiniPlayerInfo(
     mediaMetadata: MediaMetadata,
     colors: MiniPlayerContentColors,
+    losslessBadge: String? = null,
 ) {
     Column(
         modifier =
@@ -312,19 +315,45 @@ fun RowScope.MiniPlayerInfo(
             )
         }
 
-        AnimatedContent(
-            targetState = mediaMetadata.artists,
-            transitionSpec = { fadeIn() togetherWith fadeOut() },
-            label = "artist",
-        ) { artists ->
-            Text(
-                text = artists.joinToString { it.name },
-                style = MaterialTheme.typography.bodySmall,
-                color = colors.secondary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.basicMarquee(),
-            )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            AnimatedContent(
+                targetState = mediaMetadata.artists,
+                transitionSpec = { fadeIn() togetherWith fadeOut() },
+                label = "artist",
+                modifier = Modifier.weight(1f, fill = false),
+            ) { artists ->
+                Text(
+                    text = artists.joinToString { it.name },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colors.secondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.basicMarquee(),
+                )
+            }
+
+            if (!losslessBadge.isNullOrBlank()) {
+                Surface(
+                    shape = RoundedCornerShape(4.dp),
+                    color = Color.White.copy(alpha = 0.12f),
+                    border = androidx.compose.foundation.BorderStroke(0.5.dp, Color.White.copy(alpha = 0.28f)),
+                ) {
+                    Text(
+                        text = losslessBadge.uppercase(),
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 8.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp,
+                        ),
+                        color = colors.title.copy(alpha = 0.85f),
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp),
+                    )
+                }
+            }
         }
     }
 }
@@ -556,10 +585,14 @@ fun NewMiniPlayerContent(
             colors = colors,
         )
 
+        val currentFormat by playerConnection.currentFormat.collectAsStateWithLifecycle()
+        val losslessBadge = currentFormat?.losslessBadge()
+
         mediaMetadata?.let {
             MiniPlayerInfo(
                 mediaMetadata = it,
                 colors = colors,
+                losslessBadge = losslessBadge,
             )
         } ?: Spacer(Modifier.weight(1f))
 

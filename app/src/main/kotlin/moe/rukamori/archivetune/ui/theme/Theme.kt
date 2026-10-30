@@ -71,6 +71,101 @@ data class ThemeSeedPalette(
     val neutral: Color,
 )
 
+val AppleRed = Color(0xFFFA2D48)
+val AppleRedContainer = Color(0x33FA2D48)
+val AppleObsidianDark = Color(0xFF0A0A0E)
+val AppleSurfaceDark = Color(0xFF14141A)
+val AppleSurfaceVariantDark = Color(0xFF1C1C24)
+val AppleSurfaceContainerDark = Color(0xFF1E1E28)
+val AppleSurfaceContainerHighDark = Color(0xFF282834)
+val AppleOnSurfaceDark = Color(0xFFF5F5F7)
+val AppleOnSurfaceVariantDark = Color(0xFF98989F)
+val AppleOutlineDark = Color(0x38FFFFFF)
+val AppleOutlineVariantDark = Color(0x1FFFFFFF)
+
+fun appleMusicDarkColorScheme(
+    primaryColor: Color = AppleRed,
+    pureBlack: Boolean = false,
+): ColorScheme = ColorScheme(
+    primary = primaryColor,
+    onPrimary = Color.White,
+    primaryContainer = if (primaryColor == AppleRed) AppleRedContainer else primaryColor.copy(alpha = 0.22f),
+    onPrimaryContainer = Color(0xFFFFB2BC),
+    inversePrimary = primaryColor,
+    secondary = Color(0xFFE5E5EA),
+    onSecondary = Color.Black,
+    secondaryContainer = Color(0xFF2C2C2E),
+    onSecondaryContainer = Color(0xFFE5E5EA),
+    tertiary = Color(0xFF0A84FF),
+    onTertiary = Color.White,
+    tertiaryContainer = Color(0x330A84FF),
+    onTertiaryContainer = Color(0xFFB3D7FF),
+    background = if (pureBlack) Color.Black else AppleObsidianDark,
+    onBackground = AppleOnSurfaceDark,
+    surface = if (pureBlack) Color.Black else AppleSurfaceDark,
+    onSurface = AppleOnSurfaceDark,
+    surfaceVariant = if (pureBlack) Color(0xFF101014) else AppleSurfaceVariantDark,
+    onSurfaceVariant = AppleOnSurfaceVariantDark,
+    surfaceTint = primaryColor,
+    inverseSurface = Color(0xFFF2F2F7),
+    inverseOnSurface = Color(0xFF1C1C1E),
+    error = Color(0xFFFF453A),
+    onError = Color.White,
+    errorContainer = Color(0x33FF453A),
+    onErrorContainer = Color(0xFFFFB4AB),
+    outline = AppleOutlineDark,
+    outlineVariant = AppleOutlineVariantDark,
+    scrim = Color.Black,
+    surfaceBright = Color(0xFF282834),
+    surfaceContainer = AppleSurfaceContainerDark,
+    surfaceContainerHigh = AppleSurfaceContainerHighDark,
+    surfaceContainerHighest = Color(0xFF323242),
+    surfaceContainerLow = Color(0xFF121217),
+    surfaceContainerLowest = if (pureBlack) Color.Black else Color(0xFF08080B),
+    surfaceDim = if (pureBlack) Color.Black else AppleObsidianDark,
+)
+
+fun appleMusicLightColorScheme(
+    primaryColor: Color = AppleRed,
+): ColorScheme = ColorScheme(
+    primary = primaryColor,
+    onPrimary = Color.White,
+    primaryContainer = primaryColor.copy(alpha = 0.12f),
+    onPrimaryContainer = primaryColor,
+    inversePrimary = primaryColor,
+    secondary = Color(0xFF3C3C43),
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFFE5E5EA),
+    onSecondaryContainer = Color(0xFF1C1C1E),
+    tertiary = Color(0xFF007AFF),
+    onTertiary = Color.White,
+    tertiaryContainer = Color(0x1F007AFF),
+    onTertiaryContainer = Color(0xFF0040DD),
+    background = Color(0xFFF2F2F7),
+    onBackground = Color(0xFF1C1C1E),
+    surface = Color.White,
+    onSurface = Color(0xFF1C1C1E),
+    surfaceVariant = Color(0xFFE5E5EA),
+    onSurfaceVariant = Color(0xFF636366),
+    surfaceTint = primaryColor,
+    inverseSurface = Color(0xFF1C1C1E),
+    inverseOnSurface = Color(0xFFF2F2F7),
+    error = Color(0xFFFF3B30),
+    onError = Color.White,
+    errorContainer = Color(0xFFFFD8D6),
+    onErrorContainer = Color(0xFF410002),
+    outline = Color(0x38000000),
+    outlineVariant = Color(0x1F000000),
+    scrim = Color.Black,
+    surfaceBright = Color.White,
+    surfaceContainer = Color(0xFFFFFFFF),
+    surfaceContainerHigh = Color(0xFFF2F2F7),
+    surfaceContainerHighest = Color(0xFFE5E5EA),
+    surfaceContainerLow = Color(0xFFF8F8FA),
+    surfaceContainerLowest = Color.White,
+    surfaceDim = Color(0xFFE5E5EA),
+)
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ArchiveTuneTheme(
@@ -84,8 +179,6 @@ fun ArchiveTuneTheme(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val useSystemDynamicColor =
-        (seedPalette == null && themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 
     val customFontFamily =
         produceState<FontFamily?>(
@@ -121,37 +214,21 @@ fun ArchiveTuneTheme(
         remember(disableAnimations) {
             if (disableAnimations) DisabledMotionScheme else MotionScheme.expressive()
         }
-    val paletteStyle =
-        remember(themeColor, seedPalette) {
-            paletteStyleFor(seedPalette?.primary ?: themeColor)
-        }
 
-    val appColorScheme =
-        remember(seedPalette, themeColor, darkTheme) {
-            if (seedPalette != null) {
-                exactPaletteColorScheme(
-                    palette = seedPalette,
-                    isDark = darkTheme,
-                )
-            } else {
-                materialKolorDynamicColorScheme(
-                    keyColor = themeColor,
-                    isDark = darkTheme,
-                    style = paletteStyle,
-                )
-            }
-        }
-
-    val baseColorScheme =
-        if (useSystemDynamicColor) {
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        } else {
-            appColorScheme
-        }
+    val effectivePrimary = seedPalette?.primary ?: if (themeColor != DefaultThemeColor) themeColor else AppleRed
 
     val colorScheme =
-        remember(baseColorScheme, pureBlack, darkTheme) {
-            if (darkTheme && pureBlack) baseColorScheme.pureBlack(true) else baseColorScheme
+        remember(effectivePrimary, darkTheme, pureBlack) {
+            if (darkTheme) {
+                appleMusicDarkColorScheme(
+                    primaryColor = effectivePrimary,
+                    pureBlack = pureBlack,
+                )
+            } else {
+                appleMusicLightColorScheme(
+                    primaryColor = effectivePrimary,
+                )
+            }
         }
 
     val animatedColorScheme =

@@ -902,6 +902,25 @@ fun AppearanceSettings(navController: NavController) {
 
                     item {
                         PreferenceEntry(
+                            title = { Text("Glass tint opacity") },
+                            description = "${(liquidGlassTintAlpha * 100).roundToInt()}%",
+                            icon = { Icon(painterResource(R.drawable.palette), null) },
+                            isEnabled = liquidGlassEnabled,
+                            content = {
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Slider(
+                                    value = liquidGlassTintAlpha,
+                                    onValueChange = onLiquidGlassTintAlphaChange,
+                                    valueRange = 0.05f..0.85f,
+                                    enabled = liquidGlassEnabled,
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            },
+                        )
+                    }
+
+                    item {
+                        PreferenceEntry(
                             title = { Text("Refraction height") },
                             description = "${liquidGlassRefractionHeight.roundToInt()} dp",
                             icon = { Icon(painterResource(R.drawable.blur_on), null) },
