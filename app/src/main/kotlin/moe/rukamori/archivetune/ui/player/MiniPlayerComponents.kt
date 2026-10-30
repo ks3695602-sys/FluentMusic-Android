@@ -10,6 +10,10 @@
 package moe.rukamori.archivetune.ui.player
 
 import moe.rukamori.archivetune.db.entities.losslessBadge
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
@@ -347,7 +351,7 @@ fun RowScope.MiniPlayerInfo(
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontSize = 8.sp,
                             fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.5.sp,
+                            letterSpacing = 0.5f.sp,
                         ),
                         color = colors.title.copy(alpha = 0.85f),
                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp),
@@ -585,7 +589,7 @@ fun NewMiniPlayerContent(
             colors = colors,
         )
 
-        val currentFormat by playerConnection.currentFormat.collectAsStateWithLifecycle()
+        val currentFormat by playerConnection.currentFormat.collectAsState(initial = null)
         val losslessBadge = currentFormat?.losslessBadge()
 
         mediaMetadata?.let {

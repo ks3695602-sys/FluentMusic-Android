@@ -30,9 +30,7 @@ import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeInput
 import dev.chrisbanes.haze.HazePerformanceMode
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.glass.GlassOptics
 import dev.chrisbanes.haze.glass.GlassStyle
-import dev.chrisbanes.haze.glass.OpticalSizeValue
 import dev.chrisbanes.haze.glass.hazeGlass
 
 @Immutable
@@ -81,15 +79,9 @@ fun Modifier.hazeMeniscusGlass(
 
     val glassModifier = if (hazeState != null) {
         val hazeInput = remember(hazeState) { HazeInput.Sources(hazeState) }
-        val glassStyle = remember(effectiveBlurRadius, effectiveTintAlpha, tintColor, roundedShape, glint, refraction) {
+        val glassStyle = remember(effectiveTintAlpha, tintColor, roundedShape, glint) {
             GlassStyle.clear.then {
                 shape(roundedShape)
-                optics(
-                    GlassOptics.regular.copy(
-                        blurRadius = OpticalSizeValue.Fixed(effectiveBlurRadius),
-                        refractionStrength = refraction.coerceIn(0f, 1f),
-                    )
-                )
                 backgroundColor(if (tintColor.isSpecified) tintColor else Color(0xFF0A0A0E))
                 tint(
                     if (tintColor.isSpecified) {

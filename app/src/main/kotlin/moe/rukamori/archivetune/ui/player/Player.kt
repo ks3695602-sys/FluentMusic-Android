@@ -2346,26 +2346,7 @@ private fun LittlePlayerContent(
                         }
                     }
 
-                    val losslessBadge = currentFormat?.losslessBadge()
-                    if (!losslessBadge.isNullOrBlank()) {
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = Color.White.copy(alpha = 0.12f),
-                            border = androidx.compose.foundation.BorderStroke(0.75.dp, Color.White.copy(alpha = 0.28f)),
-                            modifier = Modifier.padding(top = (6f * scale).dp),
-                        ) {
-                            Text(
-                                text = losslessBadge.uppercase(),
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 0.8.sp,
-                                ),
-                                color = titleColor.copy(alpha = 0.9f),
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                            )
-                        }
-                    }
+
                 }
 
                 Spacer(Modifier.width((16f * scale).dp))

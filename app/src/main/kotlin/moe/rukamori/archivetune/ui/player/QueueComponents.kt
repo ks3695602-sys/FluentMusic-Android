@@ -335,6 +335,28 @@ fun CodecInfoRow(
                 .fillMaxWidth()
                 .padding(start = 30.dp, end = 30.dp, top = 6.dp, bottom = 2.dp),
     ) {
+        val isLossless = codec.contains("flac", ignoreCase = true) ||
+                codec.contains("alac", ignoreCase = true) ||
+                (bitrate?.filter { it.isDigit() }?.toIntOrNull() ?: 0) >= 256
+        if (isLossless) {
+            Surface(
+                shape = RoundedCornerShape(4.dp),
+                color = Color.White.copy(alpha = 0.12f),
+                border = androidx.compose.foundation.BorderStroke(0.5.dp, Color.White.copy(alpha = 0.28f)),
+                modifier = Modifier.padding(end = 6.dp),
+            ) {
+                Text(
+                    text = if ((bitrate?.filter { it.isDigit() }?.toIntOrNull() ?: 0) >= 320 || codec.contains("flac", ignoreCase = true)) "HI-RES LOSSLESS" else "LOSSLESS",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 8.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5f.sp,
+                    ),
+                    color = textColor.copy(alpha = 0.9f),
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp),
+                )
+            }
+        }
         Text(
             text =
                 buildString {
